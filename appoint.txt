@@ -1,0 +1,16 @@
+Appoint project
+
+1. Add urls
+2. Add views
+3. Add models
+4. Register models
+5. Register apps
+
+
+////
+
+
+1. Добавить расписание в виде таблицы из ссылок на ячейки
+2. Добавить аутентификацию
+3. Добавить разные html страницы
+ 
