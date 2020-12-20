@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block Title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'appoint/css/appoint.css' %}">
+</head>
+<body>
+    <header>
+        <img src="{% static 'appoint/img/doctor_appoint_logo_200x200.png' %}" alt="logo">
+        <nav>
+            <a href="{% url 'admin:index' %}">Admin panel</a>
+        </nav>
+    </header>
+
+    {% block BodyContent %}
+    {% endblock %}
+
+</body>
+</html>
