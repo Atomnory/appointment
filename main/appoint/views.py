@@ -12,7 +12,7 @@ class IndexView(generic.ListView):
         return Doctor.objects.order_by('last_name')
 
 
-class AppointView(generic.ListView):
+class DoctorAppointsView(generic.ListView):
     template_name = 'appoint/appoint.html'
     context_object_name = 'appoints_list'
 
