@@ -23,7 +23,17 @@ def doctor_appoints(request, doctor_id):
     doctor_appoint_data = {
         'title': doctor.get_full_name(),
         'doctor_name': doctor.get_full_name(),
+        'doctor_id': doctor_id,
         'appoints_list': doctor.appointment_set.all().order_by('start_time')
     }
 
     return render(request, 'appoint/appoint.html', doctor_appoint_data)
+
+
+def appoint_detail(request, doctor_id, appoint_id):
+    pass
+    # TODO: add respond to appoint_detail()
+    # TODO: add a lot Appointment objects
+    # TODO: create appoint_detail.html
+    # TODO: display appoints in column of one day
+    # TODO: display 5 column of days

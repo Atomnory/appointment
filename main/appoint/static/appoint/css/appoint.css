@@ -45,10 +45,18 @@ header nav a:hover {
     color: #64150C;
 }
 
-div.index-doctor-list {
+.index-doctor-list {
     position: relative;
     top: 100px;
-
     width: 100%;
 }
 
+.appoint-grid {
+    position: relative;
+    top: 100px;
+    width: 100%;
+}
+
+.appoint-grid.container {
+    display: flex;
+}

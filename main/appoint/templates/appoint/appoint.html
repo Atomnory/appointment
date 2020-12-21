@@ -3,7 +3,17 @@
 {% block Title %}{{ title }}{% endblock %}
 
 {% block BodyContent %}
-    <div class="appoint-grid">
-        
-    </div>
+    {% if appoints_list%}
+        <div class="appoint-grid">
+            <div class="container">
+                <div class="row row-cols-1">
+                    {% for appoint in appoints_list %}
+                        <div class="col"><a href="{% url 'appoint_detail' doctor_id appoint.id %}">{{ appoint.start_time }}</a></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <h1>There's none any appointments</h1>
+    {% endif %}
 {% endblock%}
