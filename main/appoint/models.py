@@ -30,8 +30,9 @@ class Customer(models.Model):
 
 
 class Appointment(models.Model):
-    start_time = models.DateTimeField('Start time')
-    end_time = models.DateTimeField('End time')
+    start_time = models.TimeField('Start time')
+    end_time = models.TimeField('End time')
+    date = models.DateField('Date')
     # pause_time
 
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
