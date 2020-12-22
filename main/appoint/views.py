@@ -31,9 +31,16 @@ def doctor_appoints(request, doctor_id):
 
 
 def appoint_detail(request, doctor_id, appoint_id):
-    pass
-    # TODO: add respond to appoint_detail()
+    appoint = get_object_or_404(Appointment, pk=appoint_id)
+
+    appoint_detail_data = {
+        'title': appoint.start_time,
+        'appoint_obj': appoint,
+    }
+
+    return render(request, 'appoint/appoint_detail.html', appoint_detail_data)
+
+
     # TODO: add a lot Appointment objects
-    # TODO: create appoint_detail.html
     # TODO: display appoints in column of one day
     # TODO: display 5 column of days

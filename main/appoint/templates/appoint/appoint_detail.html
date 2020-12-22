@@ -1,0 +1,14 @@
+{% extends 'appoint/layout.html' %}
+
+{% block Title %}{{ title }}{% endblock %}
+
+{% block BodyContent %}
+    <div class="appoint-detail">
+        <div class="container">
+            <h1>{{ appoint_obj.start_time }}</h1>
+            <h1>{{ appoint_obj.end_time }}</h1>
+            <h2>{{ appoint_obj.date }}</h2>
+            <h1>{{ appoint_obj.doctor.get_full_name }}</h1>
+        </div>
+    </div>
+{% endblock %}

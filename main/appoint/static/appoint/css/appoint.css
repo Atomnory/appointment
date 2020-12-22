@@ -60,3 +60,13 @@ header nav a:hover {
 .appoint-grid.container {
     display: flex;
 }
+
+.appoint-detail {
+    position: relative;
+    top: 100px;
+    width: 100%;
+}
+
+.appoint-detail.container {
+    display: flex;
+}
