@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 
 class Doctor(models.Model):
@@ -44,6 +45,12 @@ class Appointment(models.Model):
             return True
         else:
             return False
+
+    def get_week_of_year(self):
+        return self.date.isocalendar()[1]
+
+    def get_day_of_week(self):
+        return self.date.weekday()
 
     def __str__(self):
         return str(self.start_time)

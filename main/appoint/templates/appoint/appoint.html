@@ -6,9 +6,13 @@
     {% if appoints_list %}
         <div class="appoint-grid">
             <div class="container">
+                <h1>{{ today }}</h1>
+                <h2>{{ appoint_week_display }}</h2>
                 <div class="row row-cols-1">
-                    {% for appoint in appoints_list %}
-                        <div class="col"><a href="{% url 'appoint_detail' doctor_id appoint.id %}">{{ appoint.start_time }}</a></div>
+                    {% for columns in appoints_list %}
+                        {% for rows in columns %}
+                        <div class="col"><a href="{% url 'appoint_detail' doctor_id appoint.id %}">{{ rows.start_time }}</a></div>
+                        {% endfor %}
                     {% endfor %}
                 </div>
             </div>
