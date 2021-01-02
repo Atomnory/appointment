@@ -2,20 +2,20 @@
 
 {% block Title %}{{ title }}{% endblock %}
 
+{% block HeaderTitle%}{{ doctor_name }}{% endblock %}
+
 {% block BodyContent %}
     {% if appoints_list %}
-        <div class="appoint-grid">
-            <div class="container">
-                <h1>{{ today }}</h1>
-                <h2>{{ appoint_week_display }}</h2>
-                <div class="row row-cols-1">
-                    {% for columns in appoints_list %}
-                        {% for rows in columns %}
-                        <div class="col"><a href="{% url 'appoint_detail' doctor_id appoint.id %}">{{ rows.start_time }}</a></div>
-                        {% endfor %}
+        <div class="container">
+            {% for columns in appoints_list %}
+                <div class="col">
+                    <h4>{{ columns.0.date|date:"l" }}</h4>
+                    <p>{{ columns.0.date|date:"d N" }}</p>
+                    {% for rows in columns %}
+                        <div class="row"><a href="{% url 'appoint_detail' doctor_id rows.id %}">{{ rows.start_time|time:"H:i" }}</a></div>
                     {% endfor %}
                 </div>
-            </div>
+            {% endfor %}
         </div>
     {% else %}
         <h1>There's none any appointments</h1>

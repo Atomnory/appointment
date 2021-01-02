@@ -12,13 +12,19 @@
 <body>
     <header>
         <a href="{% url 'index' %}"><img src="{% static 'appoint/img/doctor_appoint_logo_200x200.png' %}" alt="logo"></a>
+        <h3>
+            {% block HeaderTitle %}
+            {% endblock %}
+        </h3>
         <nav>
             <a href="{% url 'admin:index' %}">Admin panel</a>
         </nav>
     </header>
 
+    <div class="BodyContent">
     {% block BodyContent %}
     {% endblock %}
+    </div>
 
 </body>
 </html>

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from datetime import date
+from datetime import timedelta
 from django.urls import reverse
 from django.views import generic
 from .models import Appointment
@@ -18,13 +19,18 @@ class IndexView(generic.ListView):
 
 
 def doctor_appoints(request, doctor_id):
-    doctor = get_object_or_404(Doctor, pk=doctor_id)
+    doctor = get_object_or_404(Doctor, pk=doctor_id)    # 404 if doctor doesn't exist
 
     appoint_list = []
     today = date.today()
+
+    # Next code change today for displaying next week on '/<pk>/appoint' if today weekend
+    if today.weekday() == 5:
+        today += timedelta(days=2)
+    elif today.weekday() == 6:
+        today += timedelta(days=1)
+
     appoint_week_display = today.isocalendar()[1]
-    if today.weekday() > 4:
-        appoint_week_display += 1
 
     unsorted_list = doctor.appointment_set.order_by('start_time')
     for elem in range(5):
@@ -39,9 +45,9 @@ def doctor_appoints(request, doctor_id):
         'title': doctor.get_full_name(),
         'doctor_name': doctor.get_full_name(),
         'doctor_id': doctor_id,
-        'appoints_list': appoint_list,
         'today': today,
-        'appoint_week_display': appoint_week_display
+        'appoint_week_display': appoint_week_display,
+        'appoints_list': appoint_list,
     }
 
     return render(request, 'appoint/appoint.html', doctor_appoint_data)

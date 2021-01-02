@@ -22,6 +22,12 @@ header {
     border-bottom: 2px solid #669999;
 }
 
+header h3 {
+    position: absolute;
+    left: 250px;
+    margin: 0;
+}
+
 header nav {
     text-align: left;
     font-family: 'Poppins', sans-serif;
@@ -45,28 +51,41 @@ header nav a:hover {
     color: #64150C;
 }
 
-.index-doctor-list {
+.BodyContent {
     position: relative;
-    top: 100px;
+    top: 98px;
     width: 100%;
 }
 
-.appoint-grid {
-    position: relative;
-    top: 100px;
-    width: 100%;
+.container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+
+    justify-content: stretch;
+    align-content: start;
+
+    grid-gap: 0 10px;
 }
 
-.appoint-grid.container {
-    display: flex;
+.col {
+    display: grid;
+
+    justify-content: stretch;
+    align-content: start;
+
+    grid-gap: 10px 0;
 }
 
-.appoint-detail {
-    position: relative;
-    top: 100px;
-    width: 100%;
+.col p, h4 {
+    margin: 0;
 }
 
-.appoint-detail.container {
-    display: flex;
+.row {
+    margin: 0 0;
+
+    background: #EBDEF0;
+    border: 2px solid #669999;
+}
+
+.appoint-detail{
 }
