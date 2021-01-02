@@ -62,8 +62,3 @@ def appoint_detail(request, doctor_id, appoint_id):
     }
 
     return render(request, 'appoint/appoint_detail.html', appoint_detail_data)
-
-
-    # TODO: add a lot Appointment objects
-    # TODO: display appoints in column of one day
-    # TODO: display 5 column of days
