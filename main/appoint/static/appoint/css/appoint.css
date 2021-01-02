@@ -1,0 +1,91 @@
+
+body {
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+}
+
+header {
+    float: top;
+    padding: 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #66cc99;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 98px;
+    border-bottom: 2px solid #669999;
+}
+
+header h3 {
+    position: absolute;
+    left: 250px;
+    margin: 0;
+}
+
+header nav {
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+}
+
+header nav a {
+    font-size: 28px;
+
+    display: inline-block;
+    margin: 0 15px;
+
+    color: #0c3f66;
+    background-color: #66cc99;
+    text-decoration: none;
+
+    transition: color 150ms linear;
+    position: relative;
+}
+
+header nav a:hover {
+    color: #64150C;
+}
+
+.BodyContent {
+    position: relative;
+    top: 98px;
+    width: 100%;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+
+    justify-content: stretch;
+    align-content: start;
+
+    grid-gap: 0 10px;
+}
+
+.col {
+    display: grid;
+
+    justify-content: stretch;
+    align-content: start;
+
+    grid-gap: 10px 0;
+}
+
+.col p, h4 {
+    margin: 0;
+}
+
+.row {
+    margin: 0 0;
+
+    background: #EBDEF0;
+    border: 2px solid #669999;
+}
+
+.appoint-detail{
+}
