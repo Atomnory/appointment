@@ -1,16 +1,13 @@
 Appoint project
 
 1. Add urls
-2. Add views
-3. Add models
-4. Register models
-5. Register apps
 
 
 ////
 
-
-1. Добавить расписание в виде таблицы из ссылок на ячейки
+1. Добавить csrf-token и form на appoint_detail.html
+1,5. Добавить html страницу успеха csrf-token
 2. Добавить аутентификацию
+2,5. Заменить doctor и customer поля в Appointment model на группы пользователей
 3. Добавить разные html страницы
  
