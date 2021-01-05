@@ -1,0 +1,19 @@
+{% extends 'appoint/layout.html' %}
+
+{% block Title %}{{ title }}{% endblock %}
+
+{% block BodyContent %}
+    <div class="make_appoint">
+        {{ appoint.doctor.get_full_name }}<br>
+        {{ appoint.date|date:"j N Y" }}<br>
+        {{ appoint.start_time|time:"H:i" }} - {{ appoint.end_time|time:"H:i" }}<br><br>
+
+        <form method="post">
+            {% csrf_token %}
+            <span>{{ error_text }}</span>
+            {{ form.first_name }}<br>
+            {{ form.last_name }}<br>
+            <button class="btn btn-success" type="submit">Accept</button>
+        </form>
+    </div>
+{% endblock %}

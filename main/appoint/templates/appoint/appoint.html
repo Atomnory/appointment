@@ -11,8 +11,8 @@
                 <div class="col">
                     <h4>{{ columns.0.date|date:"l" }}</h4>
                     <p>{{ columns.0.date|date:"d N" }}</p>
-                    {% for rows in columns %}
-                        <div class="row"><a href="{% url 'appoint_detail' doctor_id rows.id %}">{{ rows.start_time|time:"H:i" }}</a></div>
+                    {% for appoint in columns %}
+                        <div class="row"><a href="{% url 'appoint_detail' doctor_id appoint.id %}">{{ appoint.start_time|time:"H:i" }}</a></div>
                     {% endfor %}
                 </div>
             {% endfor %}

@@ -6,4 +6,5 @@ urlpatterns = [
     path('<int:doctor_id>/appoint', views.doctor_appoints, name='doctor_appoints'),
     #path('<int:pk>', views.DoctorDetailView.as_view(), name='doctor_detail'),
     path('<int:doctor_id>/appoint/<int:appoint_id>', views.appoint_detail, name='appoint_detail'),
+    path('<int:doctor_id>/appoint/<int:appoint_id>/make', views.make_appoint, name='make_appoint'),
 ]
