@@ -1,0 +1,6 @@
+{% extends 'appoint/appoint.html' %}
+
+{% block ButtonPrevWeek %}
+    <a href="{% url 'doctor_appoints_with_day' doctor_id prev_week %}" class="btn btn-info" role="button">Prev week</a>
+    <a href="{% url 'doctor_appoints_with_day' doctor_id next_week %}" class="btn btn-info" role="button">Next week</a>
+{% endblock ButtonPrevWeek %}

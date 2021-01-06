@@ -5,7 +5,11 @@ from .models import Customer
 
 
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('start_time', 'end_time', 'date')
+    list_display = ('start_time', 'end_time', 'date', 'doctor', 'check_appointment_empty_customer', 'is_outdated')
+
+    list_filter = ['start_time', 'date']
+
+    search_fields = ['start_time', 'date']
 
 
 admin.site.register(Doctor)

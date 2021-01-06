@@ -2,17 +2,25 @@
 
 {% block Title %}{{ title }}{% endblock %}
 
+{% block HeaderTitle %}
+    <a href="{% url 'doctor_appoints' appoint.doctor.id %}">{{ appoint.doctor.get_full_name }}</a>
+{% endblock %}
+
 {% block BodyContent %}
     <div class="appoint-detail">
-        <h1>{{ appoint.start_time|time:"H:i" }}</h1>
-        <h1>{{ appoint.end_time|time:"H:i" }}</h1>
-        <h2>{{ appoint.date|date:"j N Y" }}</h2>
-        <h1>{{ appoint.doctor.get_full_name }}</h1><br>
+        <h1>Start time: {{ appoint.start_time|time:"H:i" }}</h1>
+        <h1>End time: {{ appoint.end_time|time:"H:i" }}</h1>
+        <h2>Date: {{ appoint.date|date:"j N Y" }}</h2>
+        <h1>Doctor: {{ appoint.doctor.get_full_name }}</h1><br>
 
         {% if appoint.check_appointment_empty_customer %}
-            <a href="{% url 'make_appoint' appoint.doctor.id appoint.id %}" class="btn btn-primary" role="button">Make appoint</a>
+            {% if not appoint.is_outdated %}
+                <a href="{% url 'make_appoint' appoint.doctor.id appoint.id %}" class="btn btn-primary" role="button">Make appoint</a>
+            {% else %}
+                <h1>Appoint is outdated</h1>
+            {% endif %}
         {% else %}
-            <h1>{{ appoint.customer.get_full_name }}</h1>
+            <h1>Customer: {{ appoint.customer.get_full_name }}</h1>
         {% endif %}
     </div>
 {% endblock %}

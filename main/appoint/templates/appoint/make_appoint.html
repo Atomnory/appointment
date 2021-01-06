@@ -2,6 +2,10 @@
 
 {% block Title %}{{ title }}{% endblock %}
 
+{% block HeaderTitle %}
+    <a href="{% url 'appoint_detail' appoint.doctor.id appoint.id %}">Back to appointment</a>
+{% endblock %}
+
 {% block BodyContent %}
     <div class="make_appoint">
         {{ appoint.doctor.get_full_name }}<br>

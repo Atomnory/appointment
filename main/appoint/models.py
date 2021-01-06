@@ -69,7 +69,13 @@ class Appointment(models.Model):
         return str(self.start_time)
 
     def get_absolute_url(self):
-        return f'/{self.doctor.id}/appoints/{self.id}'
+        return f'/{self.doctor.id}/appoint/{self.id}'
 
     class Meta:
         ordering = ['start_time']
+
+    check_appointment_empty_customer.boolean = True
+    check_appointment_empty_customer.short_description = 'Have not customer?'
+
+    is_outdated.boolean = True
+    is_outdated.short_description = 'Is Outdated?'

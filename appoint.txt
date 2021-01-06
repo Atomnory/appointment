@@ -5,8 +5,8 @@ Appoint project
 
 ////
 
-1. Добавить csrf-token и form на appoint_detail.html
-1,5. Добавить html страницу успеха csrf-token
+1. Добавить проверку is_outdated()
+1,5. Добавить изменение страницы на appoint.html
 2. Добавить аутентификацию
 2,5. Заменить doctor и customer поля в Appointment model на группы пользователей
 3. Добавить разные html страницы
