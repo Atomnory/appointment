@@ -1,6 +1,10 @@
 {% extends 'appoint/appoint.html' %}
 
-{% block ButtonPrevWeek %}
-    <a href="{% url 'doctor_appoints_with_day' doctor_id prev_week %}" class="btn btn-info" role="button">Prev week</a>
-    <a href="{% url 'doctor_appoints_with_day' doctor_id next_week %}" class="btn btn-info" role="button">Next week</a>
-{% endblock ButtonPrevWeek %}
+{% block ButtonChangeWeek %}
+    {% if is_pw_app_exists %}
+        <a href="{% url 'doctor_appoints_with_day' doctor_id prev_week %}" class="btn btn-light" role="button">Prev week</a>
+    {% endif %}
+    {% if is_nw_app_exists %}
+        <a href="{% url 'doctor_appoints_with_day' doctor_id next_week %}" class="btn btn-light" role="button">Next week</a>
+    {% endif %}
+{% endblock ButtonChangeWeek %}

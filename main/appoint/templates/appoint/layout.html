@@ -8,23 +8,31 @@
     <link rel="stylesheet" href="{% static 'appoint/css/appoint.css' %}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style> </style>
 </head>
 <body>
-    <header>
-        <a href="{% url 'index' %}"><img src="{% static 'appoint/img/doctor_appoint_logo_200x200.png' %}" alt="logo"></a>
-        <h3>
-            {% block HeaderTitle %}
-            {% endblock %}
-        </h3>
-        <nav>
-            <a href="{% url 'admin:index' %}">Admin panel</a>
-        </nav>
-    </header>
+    <div class="page">
+        <header class="header">
+            <a href="{% url 'index' %}"><img src="{% static 'appoint/img/doctor_appoint_logo_200x200.png' %}" alt="logo"></a>
+            <nav class="header-nav">
+                {% block HeaderTitle %}
+                {% endblock %}
+                <a href="{% url 'admin:index' %}">Admin panel</a>
 
-    <div class="BodyContent">
-    {% block BodyContent %}
-    {% endblock %}
+            </nav>
+            <a class="header-link" href="#">Login/Profile</a>
+
+        </header>
+
+        <main class="BodyContent">
+            {% block BodyContent %}
+            {% endblock BodyContent %}
+        </main>
+
+        <footer class="footer">
+            {% block Footer %}
+            {% endblock Footer %}
+        </footer>
     </div>
-
 </body>
 </html>

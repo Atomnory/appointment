@@ -1,0 +1,26 @@
+{% extends 'appoint/layout.html' %}
+
+{% block Title %}{{ doctor_obj.get_full_name }}{% endblock %}
+
+{% block HeaderTitle %}
+    <a href="{% url 'index' %}">To main</a>
+{% endblock %}
+
+{% block BodyContent %}
+    <div class="doctor_detail">
+        <h1>{{ doctor_obj.get_full_name }}</h1>
+        <h4>{{ doctor_obj.specialization }}</h4>
+
+        <div class="doctor_detail_info">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Aliquid amet consectetur dicta distinctio dolore eaque expedita fugit hic illum inventore natus, obcaecati odit,
+            perspiciatis quis sint! Accusantium ad atque beatae consequatur cupiditate deserunt excepturi, exercitationem expedita
+            fugit impedit necessitatibus, non perferendis praesentium quibusdam quis, repellat repellendus similique sunt
+            veritatis voluptatem!
+        </div>
+    </div>
+{% endblock %}
+
+{% block Footer %}
+    <a href="{% url 'doctor_appoints' doctor_obj.id %}" class="btn btn-warning" role="button">Show appointments</a>
+{% endblock Footer %}

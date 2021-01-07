@@ -11,16 +11,20 @@
         <h1>Start time: {{ appoint.start_time|time:"H:i" }}</h1>
         <h1>End time: {{ appoint.end_time|time:"H:i" }}</h1>
         <h2>Date: {{ appoint.date|date:"j N Y" }}</h2>
-        <h1>Doctor: {{ appoint.doctor.get_full_name }}</h1><br>
+        <h1>Doctor: {{ appoint.doctor.get_full_name }}</h1>
 
-        {% if appoint.check_appointment_empty_customer %}
-            {% if not appoint.is_outdated %}
-                <a href="{% url 'make_appoint' appoint.doctor.id appoint.id %}" class="btn btn-primary" role="button">Make appoint</a>
-            {% else %}
-                <h1>Appoint is outdated</h1>
-            {% endif %}
-        {% else %}
+        {% if not appoint.check_appointment_empty_customer %}
             <h1>Customer: {{ appoint.customer.get_full_name }}</h1>
         {% endif %}
     </div>
 {% endblock %}
+
+{% block Footer %}
+    {% if appoint.check_appointment_empty_customer %}
+        {% if not appoint.is_outdated %}
+            <a href="{% url 'make_appoint' appoint.doctor.id appoint.id %}" class="btn btn-light" role="button">Make appoint</a>
+        {% else %}
+            <h1>Appoint is outdated</h1>
+        {% endif %}
+    {% endif %}
+{% endblock Footer %}

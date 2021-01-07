@@ -3,11 +3,11 @@
 {% block Title %}{{ title }}{% endblock %}
 
 {% block HeaderTitle %}
-    <a href="{% url 'index' %}">To main</a>
+    <a href="{% url 'doctor_detail' doctor_id %}">To doctor</a>
 {% endblock %}
 
 {% block BodyContent %}
-    {% if appoints_list %}
+    {% if appoints_list.0 %}
         <div class="container">
             {% for columns in appoints_list %}
                 <div class="col">
@@ -28,13 +28,16 @@
                     {% endfor %}
                 </div>
             {% endfor %}
-            <footer>
-                {% block ButtonPrevWeek %}
-                <a href="{% url 'doctor_appoints_with_day' doctor_id next_week %}" class="btn btn-info" role="button">Next week</a>
-                {% endblock ButtonPrevWeek %}
-            </footer>
         </div>
     {% else %}
         <h1>There's none any appointments</h1>
     {% endif %}
 {% endblock %}
+
+{% block Footer %}
+    {% block ButtonChangeWeek %}
+        {% if is_nw_app_exists %}
+            <a href="{% url 'doctor_appoints_with_day' doctor_id next_week %}" class="btn btn-info" role="button">Next week</a>
+        {% endif %}
+    {% endblock ButtonChangeWeek %}
+{% endblock Footer %}

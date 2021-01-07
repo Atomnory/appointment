@@ -1,0 +1,18 @@
+{% extends 'appoint/layout.html' %}
+
+{% block Title %}{{ customer.get_full_name }}{% endblock %}
+
+{% block HeaderTitle %}
+    <a href="{% url 'index' %}">To main</a>
+{% endblock %}
+
+{% block BodyContent %}
+    <div class="customer_detail">
+        <h2>{{ customer.first_name }}</h2>
+        <h2>{{ customer.last_name }}</h2><br>
+
+        {% for appoint in appointment_list %}
+            <h3>Appointment: {{ appoint.date|date:"j N Y" }}, {{ appoint.start_time|time:"H:i" }} - {{ appoint.end_time|time:"H:i" }} : {{ appoint.doctor }} ({{ appoint.doctor.specialization }})</h3>
+        {% endfor %}
+    </div>
+{% endblock %}

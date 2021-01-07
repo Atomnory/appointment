@@ -46,24 +46,33 @@ class Appointment(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
 
     def check_appointment_empty_customer(self):
-        """:return: True if this appointment may be reserved. False if appointment is already reserved."""
-        # if self.customer is None:
-        #     return True
-        # else:
-        #     return False
+        """
+            True if this appointment has not customer.
+            False if appointment already has customer.
+
+            :return: Boolean
+        """
         return self.customer is None
 
-    def get_week_of_year(self):
-        return self.date.isocalendar()[1]
-
-    def get_day_of_week(self):
-        return self.date.weekday()
-
     def is_outdated(self):
-        """:return: True if this appointment is outdated. False if appointment is still fresh."""
+        """
+            True if this appointment is outdated.
+            False if appointment is still fresh.
+
+            :return: Boolean
+        """
         today = datetime.datetime.today()
         day = datetime.datetime.combine(self.date, self.start_time)
         return day <= today
+
+    def is_working_day_appointment(self):
+        """
+            True if this appointment is in working day.
+            False if appointment is in weekend.
+
+            :return: Boolean
+        """
+        return 0 <= self.date.weekday() <= 4
 
     def __str__(self):
         return str(self.start_time)
@@ -79,3 +88,6 @@ class Appointment(models.Model):
 
     is_outdated.boolean = True
     is_outdated.short_description = 'Is Outdated?'
+
+    is_working_day_appointment.boolean = True
+    is_working_day_appointment.short_description = 'Is in working day?'

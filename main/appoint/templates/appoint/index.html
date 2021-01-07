@@ -3,11 +3,11 @@
 {% block Title %}Doctor appointment{% endblock %}
 
 {% block BodyContent %}
-    <div class="index-doctor-list">
+    <div class="index_doctor_list">
         {% if doctors_list %}
             <ul>
                 {% for doctor in doctors_list %}
-                    <li><a href="{% url 'doctor_appoints' doctor.id %}">{{ doctor.get_full_name }}</a></li>
+                    <li><a href="{% url 'doctor_detail' doctor.id %}">{{ doctor.get_full_name }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}

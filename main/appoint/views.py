@@ -23,12 +23,34 @@ class IndexView(generic.ListView):
         return Doctor.objects.order_by('last_name')
 
 
+class DoctorDetailView(generic.DetailView):
+    model = Doctor
+    template_name = 'appoint/doctor_detail.html'
+    context_object_name = 'doctor_obj'
+
+
+class CustomerDetailView(generic.DetailView):
+    model = Customer
+    template_name = 'appoint/customer_detail.html'
+
+    # return object and handmade 'appointment_list'
+    #   https://stackoverflow.com/questions/45295771/django-detailview-implementing-a-get-queryset
+    def get_object(self, queryset=None):
+        customer = get_object_or_404(Customer, pk=self.kwargs['pk'])
+        return customer
+
+    def get_context_data(self, **kwargs):
+        context = super(CustomerDetailView, self).get_context_data(**kwargs)
+        context['appointment_list'] = context['object'].appointment_set.order_by('date')
+        return context
+
+
 def get_today_or_next_week_monday_if_today_is_weekend():
     """
         Get today.
         If today is weekend get next week monday.
 
-        :return: instance of datetime.date
+        :return: Instance of datetime.date
     """
     today = date.today()
     # Next code change 'today' for displaying next week if 'today' is weekend
@@ -49,21 +71,61 @@ def get_filtered_appoint_list(*, key_day, unfiltered_list):
         :return: Instance of List with nested Lists of Appointments.
         Index of List = day of week (default = 0 ... 4)
     """
+    # TODO: test if unfiltered_list is empty
+
     appointment_list = []   # list to return
     number_of_working_days = 5  # number days of week and index of List
-    appoint_week_display = key_day.isocalendar()[1]  # number week of 'today'
+    key_day_week_iso = key_day.isocalendar()[1]     # 'key_day' week of year number
+    key_day_year_iso = key_day.isocalendar()[0]     # 'key_day' year number
 
     # add list with appoints of each day to 'appointment_list' with index = number day of week
     for elem in range(number_of_working_days):
         temp_list = []  # temporary list of each day
+
         for appoint in unfiltered_list:
-            if appoint.get_week_of_year() == appoint_week_display and appoint.get_day_of_week() == elem:
-                # add appoint to 'temp_list' if 'appoint' week == 'today' week
+            if appoint.date.isocalendar()[0] == key_day_year_iso and \
+                    appoint.date.isocalendar()[1] == key_day_week_iso and \
+                    appoint.date.weekday() == elem:
+                # add appoint to 'temp_list' if 'appoint' year == 'key_day' year
+                # and if 'appoint' week == 'key_day' week
                 # and if 'appoint' day is working day(0-4(MON-FRI))
                 temp_list.append(appoint)
+
+        # add temp_list to appointment_list with index = number day of week
         appointment_list.append(temp_list)
 
     return appointment_list
+
+
+def does_doctor_have_any_appoint_on_week(*, key_day, doctor_id):
+    """
+        Return True if doctor have although one appointment on 'key_day' week.
+            False if doctor have not any.
+            None if doctor with 'doctor_id' does not exist.
+
+        :param key_day: Instance of datetime.date
+        :param doctor_id: id of Instance of Doctor
+        :return: Boolean or None
+    """
+    key_day_week_iso = key_day.isocalendar()[1]  # 'key_day' week of year number
+    key_day_year_iso = key_day.isocalendar()[0]  # 'key_day' year number
+
+    try:
+        doctor = Doctor.objects.get(pk=doctor_id)
+    except Doctor.DoesNotExist:
+        return None
+
+    prev_week_key_day = key_day - timedelta(days=7)
+    appoints = doctor.appointment_set.filter(date__gte=prev_week_key_day)
+
+    if appoints:
+        for appoint in appoints:
+            if appoint.date.isocalendar()[0] == key_day_year_iso and \
+                    appoint.date.isocalendar()[1] == key_day_week_iso and \
+                    appoint.is_working_day_appointment():
+                return True
+
+    return False
 
 
 def doctor_appoints(request, doctor_id):
@@ -71,11 +133,14 @@ def doctor_appoints(request, doctor_id):
 
     today = get_today_or_next_week_monday_if_today_is_weekend()     # get today from func
     unfiltered_list = doctor.appointment_set.order_by('start_time')  # sort appoints by 'start_time'
-
     # get filtered list from func
     appoint_list = get_filtered_appoint_list(key_day=today, unfiltered_list=unfiltered_list)
 
+    # get info about 'Next week' button for 'appoint.html'
     next_week_day = today + timedelta(days=7)
+    is_next_week_appoint_exists = does_doctor_have_any_appoint_on_week(key_day=next_week_day, doctor_id=doctor_id)
+    if is_next_week_appoint_exists is None:
+        raise Http404('Doctor suddenly does not exist.')
 
     doctor_appoint_data = {
         'title': doctor.get_full_name(),
@@ -83,6 +148,7 @@ def doctor_appoints(request, doctor_id):
         'doctor_id': doctor_id,
         'today': today,
         'next_week': next_week_day,
+        'is_nw_app_exists': is_next_week_appoint_exists,
         'appoints_list': appoint_list,
     }
 
@@ -108,19 +174,24 @@ def doctor_appoints_with_day(request, doctor_id, new_day):
         elif today_week_iso < day_week_iso:
             today = day
         elif today_week_iso > day_week_iso:
-            return Http404('Appoints in the past does not exist')
+            raise Http404('Appoints in the past does not exist')
     elif today_year_iso < day_year_iso:
         today = day
     elif today_year_iso > day_year_iso:
-        return Http404('Appoints in the past does not exist')
+        raise Http404('Appoints in the past does not exist')
 
-    prev_week_day = today - timedelta(days=7)
-    next_week_day = today + timedelta(days=7)
-
-    unfiltered_list = doctor.appointment_set.order_by('start_time')  # sort appoints by 'start_time'
-
+    # sort appoints by 'start_time'
+    unfiltered_list = doctor.appointment_set.order_by('start_time')
     # get filtered list from func
     appoint_list = get_filtered_appoint_list(key_day=today, unfiltered_list=unfiltered_list)
+
+    # get info about 'Prev week' button and 'Next week' button for 'appoint_with_day.html'
+    prev_week_day = today - timedelta(days=7)
+    next_week_day = today + timedelta(days=7)
+    is_prev_week_appoint_exists = does_doctor_have_any_appoint_on_week(key_day=prev_week_day, doctor_id=doctor_id)
+    is_next_week_appoint_exists = does_doctor_have_any_appoint_on_week(key_day=next_week_day, doctor_id=doctor_id)
+    if is_prev_week_appoint_exists is None or is_next_week_appoint_exists is None:
+        raise Http404("Doctor suddenly does not exist.")
 
     doctor_appoint_with_day_data = {
         'title': doctor.get_full_name(),
@@ -129,6 +200,8 @@ def doctor_appoints_with_day(request, doctor_id, new_day):
         'today': today,
         'prev_week': prev_week_day,
         'next_week': next_week_day,
+        'is_pw_app_exists': is_prev_week_appoint_exists,
+        'is_nw_app_exists': is_next_week_appoint_exists,
         'appoints_list': appoint_list,
     }
 
