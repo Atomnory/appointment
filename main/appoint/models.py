@@ -72,6 +72,7 @@ class Appointment(models.Model):
 
             :return: Boolean
         """
+        # function helps hide appointments on weekend
         return 0 <= self.date.weekday() <= 4
 
     def __str__(self):

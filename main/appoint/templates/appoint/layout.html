@@ -14,14 +14,20 @@
     <div class="page">
         <header class="header">
             <a href="{% url 'index' %}"><img src="{% static 'appoint/img/doctor_appoint_logo_200x200.png' %}" alt="logo"></a>
-            <nav class="header-nav">
+            <nav class="header_nav">
                 {% block HeaderTitle %}
                 {% endblock %}
                 <a href="{% url 'admin:index' %}">Admin panel</a>
 
             </nav>
-            <a class="header-link" href="#">Login/Profile</a>
-
+            <nav class="header_nav_account">
+                {% if user.is_authenticated %}
+                    <a class="header_link" href="{% url 'customer_detail' user.pk %}">Profile</a>
+                    <a class="header_link" href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a class="header_link" href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </nav>
         </header>
 
         <main class="BodyContent">

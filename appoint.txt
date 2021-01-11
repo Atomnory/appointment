@@ -9,4 +9,7 @@ Appoint project
 2. Добавить аутентификацию
 2,5. Заменить doctor и customer поля в Appointment model на группы пользователей
 3. Добавить разные html страницы
- 
+
+
+ ///
+ lewha - i.am.champ1

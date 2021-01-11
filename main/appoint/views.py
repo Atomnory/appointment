@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.views import generic
 from django.urls import reverse
 from django.http import Http404
+from django.contrib.auth.models import User
 
 from datetime import date
 from datetime import timedelta
@@ -30,19 +31,20 @@ class DoctorDetailView(generic.DetailView):
 
 
 class CustomerDetailView(generic.DetailView):
-    model = Customer
+    model = User
     template_name = 'appoint/customer_detail.html'
+    context_object_name = 'customer'
 
     # return object and handmade 'appointment_list'
     #   https://stackoverflow.com/questions/45295771/django-detailview-implementing-a-get-queryset
-    def get_object(self, queryset=None):
-        customer = get_object_or_404(Customer, pk=self.kwargs['pk'])
-        return customer
+    # def get_object(self, queryset=None):
+    #     customer = get_object_or_404(Customer, pk=self.kwargs['pk'])
+    #     return customer
 
-    def get_context_data(self, **kwargs):
-        context = super(CustomerDetailView, self).get_context_data(**kwargs)
-        context['appointment_list'] = context['object'].appointment_set.order_by('date')
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(CustomerDetailView, self).get_context_data(**kwargs)
+    #     context['appointment_list'] = context['object'].appointment_set.order_by('date')
+    #     return context
 
 
 def get_today_or_next_week_monday_if_today_is_weekend():
