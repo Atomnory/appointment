@@ -14,7 +14,7 @@
         <h1>Doctor: {{ appoint.doctor.get_full_name }}</h1>
 
         {% if not appoint.check_appointment_empty_customer %}
-            <h1>Customer: {{ appoint.customer.get_full_name }}</h1>
+            <h1>Customer: {{ appoint.user.get_full_name }}</h1>
         {% endif %}
     </div>
 {% endblock %}

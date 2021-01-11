@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
 
@@ -43,7 +44,8 @@ class Appointment(models.Model):
     # pause_time
 
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
+    # customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def check_appointment_empty_customer(self):
         """
@@ -52,7 +54,7 @@ class Appointment(models.Model):
 
             :return: Boolean
         """
-        return self.customer is None
+        return self.user is None
 
     def is_outdated(self):
         """

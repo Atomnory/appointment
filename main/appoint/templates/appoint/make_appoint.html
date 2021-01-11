@@ -15,8 +15,8 @@
         <form method="post">
             {% csrf_token %}
             <span>{{ error_text }}</span>
-            {{ form.first_name }}<br>
-            {{ form.last_name }}<br>
+            {{ user.first_name }}<br>
+            {{ user.last_name }}<br>
             <button class="btn btn-success" type="submit">Accept</button>
         </form>
     </div>

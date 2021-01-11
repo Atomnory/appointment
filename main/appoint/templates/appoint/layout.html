@@ -22,7 +22,7 @@
             </nav>
             <nav class="header_nav_account">
                 {% if user.is_authenticated %}
-                    <a class="header_link" href="{% url 'customer_detail' user.pk %}">Profile</a>
+                    <a class="header_link" href="{% url 'user_detail' user.pk %}">Profile</a>
                     <a class="header_link" href="{% url 'logout' %}">Logout</a>
                 {% else %}
                     <a class="header_link" href="{% url 'login' %}">Login</a>

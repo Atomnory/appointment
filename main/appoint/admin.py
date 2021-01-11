@@ -15,4 +15,4 @@ class AppointmentAdmin(admin.ModelAdmin):
 
 admin.site.register(Doctor)
 admin.site.register(Appointment, AppointmentAdmin)
-admin.site.register(Customer)
+# admin.site.register(Customer)

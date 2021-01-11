@@ -3,10 +3,16 @@
 
 {% block Title %}Register{% endblock %}
 
+{% block HeaderTitle %}
+    <a href="{% url 'index' %}">To main</a>
+{% endblock %}
+
 {% block BodyContent %}
-    <form method="post" class="form-group">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-success">Register</button>
-    </form>
+    <div class="body_content_form">
+        <form method="post" class="form-group">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-success">Register</button>
+        </form>
+    </div>
 {% endblock BodyContent %}

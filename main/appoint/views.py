@@ -5,14 +5,13 @@ from django.views import generic
 from django.urls import reverse
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from datetime import date
 from datetime import timedelta
 
 from .models import Appointment
 from .models import Doctor
-from .models import Customer
-from .forms import CustomerForm
 
 
 class IndexView(generic.ListView):
@@ -30,21 +29,21 @@ class DoctorDetailView(generic.DetailView):
     context_object_name = 'doctor_obj'
 
 
-class CustomerDetailView(generic.DetailView):
-    model = User
-    template_name = 'appoint/customer_detail.html'
-    context_object_name = 'customer'
+@login_required(login_url='login')
+def user_profile(request, user_id):
+    if request.user.pk == user_id:
+        user = get_object_or_404(User, pk=user_id)
 
-    # return object and handmade 'appointment_list'
-    #   https://stackoverflow.com/questions/45295771/django-detailview-implementing-a-get-queryset
-    # def get_object(self, queryset=None):
-    #     customer = get_object_or_404(Customer, pk=self.kwargs['pk'])
-    #     return customer
+        user_profile_data = {
+            'title': user.get_full_name(),
+            'user': user,
+            'appointment_list': user.appointment_set.order_by('date')
+        }
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(CustomerDetailView, self).get_context_data(**kwargs)
-    #     context['appointment_list'] = context['object'].appointment_set.order_by('date')
-    #     return context
+        return render(request, 'appoint/customer_detail.html', user_profile_data)
+
+    else:
+        return redirect('index')
 
 
 def get_today_or_next_week_monday_if_today_is_weekend():
@@ -222,6 +221,7 @@ def appoint_detail(request, doctor_id, appoint_id):
     return render(request, 'appoint/appoint_detail.html', appoint_detail_data)
 
 
+@login_required(login_url='login')
 def make_appoint(request, doctor_id, appoint_id):
     doctor = get_object_or_404(Doctor, pk=doctor_id)
     appoint = get_object_or_404(Appointment, pk=appoint_id)
@@ -230,18 +230,17 @@ def make_appoint(request, doctor_id, appoint_id):
 
     if appoint.check_appointment_empty_customer() and not appoint.is_outdated():
         if request.method == 'POST':
-            form_customer = CustomerForm(request.POST)
-            if form_customer.is_valid():
-                appoint.customer = form_customer.save(commit=False)
-                form_customer.save()
+            if request.user.is_authenticated:
+                appoint.user = request.user
                 appoint.save()
+                request.user.save()
 
                 if not appoint.check_appointment_empty_customer():
                     return redirect(reverse('appoint_detail', args=(doctor_id, appoint_id)))
                 else:
                     make_appoint_error = 'ERROR: appointment.customer still empty'
             else:
-                make_appoint_error = 'ERROR: form_customer is not valid'
+                make_appoint_error = 'ERROR: user is not authenticated'
     else:
         return redirect('doctor_appoints', doctor_id=doctor_id)
 
@@ -249,7 +248,7 @@ def make_appoint(request, doctor_id, appoint_id):
         'title': appoint.start_time,
         'appoint': appoint,
         'error_text': make_appoint_error,
-        'form': CustomerForm()
+        'user': request.user
     }
 
     return render(request, 'appoint/make_appoint.html', make_appoint_data)
