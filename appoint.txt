@@ -6,7 +6,6 @@ Appoint project
 ////
 
 
-2. Add restrict access
 2,5. Заменить doctor и customer поля в Appointment model на группы пользователей
 3. Добавить разные html страницы
 

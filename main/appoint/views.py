@@ -33,14 +33,17 @@ class DoctorDetailView(generic.DetailView):
 def user_profile(request, user_id):
     if request.user.pk == user_id:
         user = get_object_or_404(User, pk=user_id)
+        today = date.today()
 
         user_profile_data = {
             'title': user.get_full_name(),
             'user': user,
-            'appointment_list': user.appointment_set.order_by('date')
+            'appointment_list_past': user.appointment_set.filter(date__lt=today).order_by('date'),
+            'appointment_list_present': user.appointment_set.filter(date__exact=today).order_by('start_time'),
+            'appointment_list_future': user.appointment_set.filter(date__gt=today).order_by('date')
         }
 
-        return render(request, 'appoint/customer_detail.html', user_profile_data)
+        return render(request, 'appoint/user_detail.html', user_profile_data)
 
     else:
         return redirect('index')
