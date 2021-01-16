@@ -1,6 +1,6 @@
 import datetime
 from django.test import TestCase
-from .models import Staff
+from .models import Moderator
 
 
 # class AppointmentModelTests(TestCase):

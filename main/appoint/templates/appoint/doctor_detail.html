@@ -12,15 +12,11 @@
         <h4>{{ doctor.specialization }}</h4>
 
         <div class="doctor_detail_info">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Aliquid amet consectetur dicta distinctio dolore eaque expedita fugit hic illum inventore natus, obcaecati odit,
-            perspiciatis quis sint! Accusantium ad atque beatae consequatur cupiditate deserunt excepturi, exercitationem expedita
-            fugit impedit necessitatibus, non perferendis praesentium quibusdam quis, repellat repellendus similique sunt
-            veritatis voluptatem!
+            {{ doctor.info }}
         </div>
     </div>
 {% endblock %}
 
 {% block Footer %}
-    <a href="{% url 'doctor_appoints' doctor.user.id %}" class="btn btn-warning" role="button">Show appointments</a>
+    <a href="{% url 'doctor_appoints' doctor.pk %}" class="btn btn-warning" role="button">Show appointments</a>
 {% endblock Footer %}

@@ -14,7 +14,7 @@ import debug_toolbar
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
-from userauth import views as ua_views
+# from userauth import views as ua_views
 
 urlpatterns = [
     path('', include('appoint.urls')),

@@ -3,7 +3,7 @@
 {% block Title %}{{ title }}{% endblock %}
 
 {% block HeaderTitle %}
-    <a href="{% url 'doctor_detail' doctor_id %}">To doctor</a>
+    <a href="{% url 'doctor_detail' doctor_pk %}">To doctor</a>
 {% endblock %}
 
 {% block BodyContent %}
@@ -15,9 +15,9 @@
                     <p>{{ columns.0.date|date:"d N" }}</p>
                     {% for appoint in columns %}
                         <div class="row">
-                            {% if appoint.check_appointment_empty_customer %}
+                            {% if appoint.is_working_day_appointment %}
                                 {% if not appoint.is_outdated %}
-                                    <a href="{% url 'appoint_detail' doctor_id appoint.id %}">{{ appoint.start_time|time:"H:i" }}</a>
+                                    <a href="{% url 'appoint_detail' doctor_pk appoint.id %}">{{ appoint.start_time|time:"H:i" }}</a>
                                 {% else %}
                                     <p>{{ appoint.start_time|time:"H:i" }}</p>
                                 {% endif %}
@@ -37,7 +37,7 @@
 {% block Footer %}
     {% block ButtonChangeWeek %}
         {% if is_nw_app_exists %}
-            <a href="{% url 'doctor_appoints_with_day' doctor_id next_week %}" class="btn btn-info" role="button">Next week</a>
+            <a href="{% url 'doctor_appoints_with_day' doctor_pk next_week %}" class="btn btn-info" role="button">Next week</a>
         {% endif %}
     {% endblock ButtonChangeWeek %}
 {% endblock Footer %}

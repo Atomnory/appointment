@@ -3,7 +3,7 @@
 {% block Title %}{{ title }}{% endblock %}
 
 {% block HeaderTitle %}
-    <a href="{% url 'doctor_appoints' appoint.doctor_user.user.id %}">{{ appoint.doctor_user.get_full_name }}</a>
+    <a href="{% url 'doctor_appoints' appoint.doctor.pk %}">{{ appoint.doctor.get_full_name }}</a>
 {% endblock %}
 
 {% block BodyContent %}
@@ -11,18 +11,19 @@
         <h1>Start time: {{ appoint.start_time|time:"H:i" }}</h1>
         <h1>End time: {{ appoint.end_time|time:"H:i" }}</h1>
         <h2>Date: {{ appoint.date|date:"j N Y" }}</h2>
-        <h1>Doctor: {{ appoint.doctor_user.get_full_name }}</h1>
+        <h1>Doctor: {{ appoint.doctor.get_full_name }}</h1>
 
-        {% if not appoint.check_appointment_empty_customer %}
-            <h1>Customer: {{ appoint.user.get_full_name }}</h1>
+        {% if not appoint.has_not_customer %}
+            <h1>Customer: {{ appoint.customer.get_full_name }}</h1>
         {% endif %}
+
     </div>
 {% endblock %}
 
 {% block Footer %}
-    {% if appoint.check_appointment_empty_customer %}
+    {% if appoint.has_not_customer %}
         {% if not appoint.is_outdated %}
-            <a href="{% url 'make_appoint' appoint.doctor_user.user.id appoint.id %}" class="btn btn-light" role="button">Make appoint</a>
+            <a href="{% url 'make_appoint' appoint.doctor.pk appoint.pk %}" class="btn btn-light" role="button">Make appoint</a>
         {% else %}
             <h1>Appoint is outdated</h1>
         {% endif %}

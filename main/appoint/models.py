@@ -5,7 +5,7 @@ import datetime
 
 class User(AbstractUser):
     type_choices = (
-        ('S', 'Staff'),
+        ('M', 'Moderator'),
         ('D', 'Doctor'),
         ('C', 'Customer')
     )
@@ -22,10 +22,22 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return '/%i' % self.pk
 
+    def is_customer(self):
+        """Return True if User is Customer, else False"""
+        return self.user_type == 'C'
 
-class StaffManager(models.Manager):
+    def is_doctor(self):
+        """Return True if User is Doctor, else False"""
+        return self.user_type == 'D'
+
+    def is_moderator(self):
+        """Return True if User is Moderator, eld False"""
+        return self.user_type == 'M'
+
+
+class ModeratorManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
-        return super().get_queryset(*args, **kwargs).filter(user_type='S')
+        return super().get_queryset(*args, **kwargs).filter(user_type='M')
 
 
 class DoctorManager(models.Manager):
@@ -38,12 +50,12 @@ class CustomerManager(models.Manager):
         return super().get_queryset(*args, **kwargs).filter(user_type='C')
 
 
-class Staff(User):
-    objects = StaffManager()
+class Moderator(User):
+    objects = ModeratorManager()
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.user_type = 'S'
+            self.user_type = 'M'
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -53,6 +65,7 @@ class Staff(User):
 class Doctor(User):
     objects = DoctorManager()
     specialization = models.CharField('Specialization', max_length=50)
+    info = models.TextField('Information', max_length=1250, blank=True)
 
     class Meta:
         ordering = ['specialization', 'last_name']
@@ -69,6 +82,7 @@ class Doctor(User):
         return '%s %s' % (self.first_name, self.last_name)
 
     def get_absolute_url(self):
+        # return f'/{self.pk}'
         return '/%i' % self.pk
 
 
@@ -90,59 +104,8 @@ class Customer(User):
         return '%s %s' % (self.first_name, self.last_name)
 
     def get_absolute_url(self):
-        return '/profile/%i' % self.pk
-
-
-# class Doctor(models.Model):
-#     first_name = models.CharField('Doctor first name', max_length=50)
-#     last_name = models.CharField('Doctor last name', max_length=50)
-#     specialization = models.CharField('Specialization', max_length=50)
-#
-#     def __str__(self):
-#         return "%s %s" % (self.first_name, self.last_name)
-#
-#     def get_full_name(self):
-#         return "%s %s" % (self.first_name, self.last_name)
-#
-#     def get_absolute_url(self):
-#         # return f'/{self.id}'
-#         return "/%i" % self.id
-#
-#     class Meta:
-#         ordering = ['last_name']
-
-
-# class DoctorUser(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     specialization = models.CharField('Specialization', max_length=50)
-#     info = models.TextField('Information', max_length=1250, blank=True)
-#
-#     def __str__(self):
-#         return "%s %s" % (self.user.first_name, self.user.last_name)
-#
-#     def get_full_name(self):
-#         return "%s %s" % (self.user.first_name, self.user.last_name)
-#
-#     def get_absolute_url(self):
-#         return "/%i" % self.user.id
-#
-#     class Meta:
-#         ordering = ['specialization']
-
-
-# class Customer(models.Model):
-#     first_name = models.CharField('Customer first name', max_length=50)
-#     last_name = models.CharField('Customer last name', max_length=50)
-#
-#     def __str__(self):
-#         return "%s %s" % (self.first_name, self.last_name)
-#
-#     def get_full_name(self):
-#         return "%s %s" % (self.first_name, self.last_name)
-#
-#     def get_absolute_url(self):
-#         return f'/profile/{self.id}'
-#         # return "/profile/%i" % self.id
+        return f'/profile/{self.pk}'
+        # return '/profile/%i' % self.pk
 
 
 class Appointment(models.Model):
@@ -151,11 +114,6 @@ class Appointment(models.Model):
     date = models.DateField('Date')
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-
-    # pause_time
-
-    # doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    # customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
 
     def has_not_customer(self):
         """
@@ -196,8 +154,8 @@ class Appointment(models.Model):
     class Meta:
         ordering = ['start_time']
 
-    check_appointment_empty_customer.boolean = True
-    check_appointment_empty_customer.short_description = 'Have not customer?'
+    has_not_customer.boolean = True
+    has_not_customer.short_description = 'Has not customer?'
 
     is_outdated.boolean = True
     is_outdated.short_description = 'Is Outdated?'

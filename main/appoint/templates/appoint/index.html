@@ -4,10 +4,10 @@
 
 {% block BodyContent %}
     <div class="index_doctor_list">
-        {% if users_list %}
+        {% if doctors_list %}
             <ul>
                 {% for doctor in doctors_list %}
-                    <li><a href="{% url 'doctor_detail' doctor.user.id %}">{{ doctor.get_full_name }}</a></li>
+                    <li><a href="{% url 'doctor_detail' doctor.pk %}">{{ doctor.get_full_name }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}
