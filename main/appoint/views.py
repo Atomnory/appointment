@@ -1,16 +1,15 @@
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.views import generic
-from django.urls import reverse
-from django.http import Http404
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-
-from datetime import date
-from datetime import timedelta
-
-from .models import Appointment
+# from django.shortcuts import get_object_or_404
+# from django.shortcuts import render
+# from django.shortcuts import redirect
+# from django.views import generic
+# from django.urls import reverse
+# from django.http import Http404
+# from django.contrib.auth.decorators import login_required
+#
+# from datetime import date
+# from datetime import timedelta
+#
+# from .models import Appointment
 # from .models import DoctorUser
 
 

@@ -46,6 +46,9 @@ class Staff(User):
             self.user_type = 'S'
         return super().save(*args, **kwargs)
 
+    def __str__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
 
 class Doctor(User):
     objects = DoctorManager()
@@ -59,6 +62,15 @@ class Doctor(User):
             self.user_type = 'D'
         return super().save(*args, **kwargs)
 
+    def __str__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
+
+    def get_absolute_url(self):
+        return '/%i' % self.pk
+
 
 class Customer(User):
     objects = CustomerManager()
@@ -70,6 +82,15 @@ class Customer(User):
         if not self.pk:
             self.user_type = 'C'
         return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
+
+    def get_absolute_url(self):
+        return '/profile/%i' % self.pk
 
 
 # class Doctor(models.Model):
@@ -136,8 +157,7 @@ class Appointment(models.Model):
     # doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     # customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
 
-
-    def check_appointment_empty_customer(self):
+    def has_not_customer(self):
         """
             True if this appointment has not customer.
             False if appointment already has customer.
@@ -170,8 +190,8 @@ class Appointment(models.Model):
     def __str__(self):
         return str(self.start_time)
 
-    # def get_absolute_url(self):
-    #     return f'/{self.doctor.id}/appoint/{self.id}'
+    def get_absolute_url(self):
+        return f'/{self.doctor.id}/appoint/{self.id}'
 
     class Meta:
         ordering = ['start_time']
