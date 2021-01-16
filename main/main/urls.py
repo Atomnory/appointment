@@ -18,7 +18,8 @@ from userauth import views as ua_views
 
 urlpatterns = [
     path('', include('appoint.urls')),
-    path('account/register', ua_views.register, name='register'),
+    # path('account/register', ua_views.register, name='register'),
+    # path('doctor/register', ua_views.register_doctor, name='register_doctor'),
     path('', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
     path('__debug__/', include(debug_toolbar.urls)),

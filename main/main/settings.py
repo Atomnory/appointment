@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'main.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'main_ap_db',
+        'NAME': 'main_appoint_db2',
         'USER': 'dbmaster',
         'PASSWORD': 'ostrov1leto1polls',
         'HOST': '127.0.0.1',
@@ -133,6 +133,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+AUTH_USER_MODEL = 'appoint.User'
 
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'

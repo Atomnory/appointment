@@ -6,7 +6,9 @@ Appoint project
 ////
 
 
-2,5. Заменить doctor и customer поля в Appointment model на группы пользователей
+1. Заменить doctor в Appointment model на группу пользователей
+2. Добавить создание appointment доктором
+2,5. Добавить роль Администратора
 3. Добавить разные html страницы
 
 
