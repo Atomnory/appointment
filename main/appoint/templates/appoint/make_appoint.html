@@ -14,7 +14,7 @@
 
         <form method="post">
             {% csrf_token %}
-            <span>{{ error_text }}</span>
+            <span>{{ error_text }}</span><br>
             {{ customer.first_name }}<br>
             {{ customer.last_name }}<br>
             <button class="btn btn-success" type="submit">Accept</button>

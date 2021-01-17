@@ -1,0 +1,17 @@
+{% extends 'appoint/layout.html' %}
+
+{% block Title %}Dashboard{% endblock %}
+
+{% block BodyContent %}
+    <div class="dashboard_name">
+        <h1>{{ user.get_full_name }}</h1>
+    </div>
+    <a href="{% url 'register_moderator' %}" class="btn btn-warning" role="button">Create moderator</a><br>
+    <a href="{% url 'register_doctor' %}" class="btn btn-dark" role="button">Create doctor</a><br>
+    <h1>Change Doctor</h1>
+    <h1>Delete Doctor</h1>
+    <h1>Create new Appoint</h1>
+    <h1>Create a lot Appoints</h1>
+    <h1>Change Appoint</h1>
+    <h1>Delete Appoint</h1>
+{% endblock %}

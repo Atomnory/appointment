@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import UserManager
 import datetime
 
 
@@ -35,23 +36,28 @@ class User(AbstractUser):
         return self.user_type == 'M'
 
 
-class ModeratorManager(models.Manager):
-    def get_queryset(self, *args, **kwargs):
-        return super().get_queryset(*args, **kwargs).filter(user_type='M')
+class ModeratorManager(UserManager):
+    # def get_queryset(self, *args, **kwargs):
+    #     return super().get_queryset(*args, **kwargs).filter(user_type='M')
+    def get_queryset(self):
+        return super().get_queryset().filter(user_type='M')
 
 
-class DoctorManager(models.Manager):
-    def get_queryset(self, *args, **kwargs):
-        return super().get_queryset(*args, **kwargs).filter(user_type='D')
+class DoctorManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(user_type='D')
 
 
-class CustomerManager(models.Manager):
-    def get_queryset(self, *args, **kwargs):
-        return super().get_queryset(*args, **kwargs).filter(user_type='C')
+class CustomerManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(user_type='C')
 
 
 class Moderator(User):
     objects = ModeratorManager()
+
+    class Meta:
+        ordering = ['last_name']
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -60,6 +66,9 @@ class Moderator(User):
 
     def __str__(self):
         return "%s %s" % (self.first_name, self.last_name)
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
 
 
 class Doctor(User):

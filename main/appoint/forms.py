@@ -1,5 +1,11 @@
-# from .models import Customer
-# from django import forms
+from .models import Appointment
+from django import forms
+
+
+class AppointmentCreateForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['start_time', 'end_time', 'date']
 
 
 # class CustomerForm(forms.ModelForm):

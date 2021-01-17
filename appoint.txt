@@ -6,13 +6,18 @@ Appoint project
 ////
 
 
-1. Заменить doctor в Appointment model на группу пользователей
+1,5. Добавить страницу смены пароля для Moderator
 2. Добавить создание appointment доктором
-2,5. Добавить роль Администратора
 3. Добавить разные html страницы
 
 
  ///
- User:
- lewha - i.am.champ1
- sbinalla - love_to_spin5
+ Customer:
+    lewha - i.am.champ1
+    sbinalla - love_to_spin5
+ Doctor:
+    zakary - go.norris.23
+    toto - Ham.num.1
+ Moderator:
+    jeant - mi55on_no_win
+    rossy - 2-deflect-win

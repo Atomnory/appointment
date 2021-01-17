@@ -25,7 +25,10 @@
                     {% if user.is_customer %}
                         <a class="header_link" href="{% url 'user_detail' user.pk %}">Profile</a>
                     {% elif user.is_doctor %}
+                        <a class="header_link" href="{% url 'doctor_dashboard' user.pk %}">Dashboard</a>
                         <a class="header_link" href="{% url 'doctor_detail' user.pk %}">Profile</a>
+                    {% elif user.is_moderator %}
+                        <a class="header_link" href="{% url 'moderator_dashboard' %}">Moderator dashboard</a>
                     {% endif %}
                     <a class="header_link" href="{% url 'logout' %}">Logout</a>
                 {% else %}

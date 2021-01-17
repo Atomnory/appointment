@@ -5,10 +5,12 @@ from django.views import generic
 from django.urls import reverse
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 
 from datetime import date
 from datetime import timedelta
 
+from .forms import AppointmentCreateForm
 from .models import Appointment
 from .models import Moderator
 from .models import Doctor
@@ -245,9 +247,9 @@ def make_appoint(request, doctor_pk, appoint_pk):
     if appoint.has_not_customer() and not appoint.is_outdated():
         if request.method == 'POST':
             if request.user.is_authenticated and request.user.is_customer():
-                appoint.user = request.user
+                customer = get_object_or_404(Customer, pk=request.user.pk)
+                appoint.customer = customer
                 appoint.save()
-                request.user.save()
 
                 if not appoint.has_not_customer():
                     return redirect(reverse('appoint_detail', args=(doctor_pk, appoint_pk)))
@@ -266,3 +268,52 @@ def make_appoint(request, doctor_pk, appoint_pk):
     }
 
     return render(request, 'appoint/make_appoint.html', make_appoint_data)
+
+
+@login_required(login_url='login')
+def moderator_dashboard(request):
+
+    moderator_dashboard_data = {
+        'user': request.user
+    }
+
+    if request.user.is_authenticated and request.user.is_moderator():
+        return render(request, 'appoint/moderator_dashboard.html', moderator_dashboard_data)
+    else:
+        raise Http404("ERROR: user is not authenticated.")
+
+
+@login_required(login_url='login')
+def doctor_dashboard(request, doctor_pk):
+    doctor = get_object_or_404(Doctor, pk=doctor_pk)
+
+    doctor_dashboard_data = {
+        'user': request.user
+    }
+
+    if request.user.is_authenticated and request.user.pk == doctor_pk and request.user.is_doctor():
+        return render(request, 'appoint/doctor_dashboard.html', doctor_dashboard_data)
+    else:
+        raise Http404("ERROR: user is not authenticated.")
+
+
+@login_required(login_url='login')
+@permission_required('appoint.add_appointment', raise_exception=True)
+def create_appoint(request, doctor_pk):
+    doctor = get_object_or_404(Doctor, pk=doctor_pk)
+
+    if request.method == 'POST' and request.user.is_doctor:
+        form = AppointmentCreateForm(request.POST)
+        if form.is_valid():
+            appoint = form.save(commit=False)
+            appoint.doctor = doctor
+            appoint.save()
+
+            return redirect('doctor_appoints', doctor_pk=doctor_pk)
+
+        else:
+            raise Http404('Form is not valid')
+    else:
+        form = AppointmentCreateForm()
+
+    return render(request, 'appoint/create_appoint.html', {'form': form})
