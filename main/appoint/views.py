@@ -338,3 +338,5 @@ def create_appoint_moderator(request):
 
     return render(request, 'appoint/create_appoint.html', {'form': form})
 
+
+# TODO: combine create_appoint_doctor and create_appoint_moderator
