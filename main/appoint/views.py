@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import permission_required
 from datetime import date
 from datetime import timedelta
 
-from .forms import AppointmentCreateForm
+from .forms import AppointmentCreateFormDoctor
+from .forms import AppointmentCreateFormModerator
 from .models import Appointment
 from .models import Moderator
 from .models import Doctor
@@ -299,11 +300,11 @@ def doctor_dashboard(request, doctor_pk):
 
 @login_required(login_url='login')
 @permission_required('appoint.add_appointment', raise_exception=True)
-def create_appoint(request, doctor_pk):
+def create_appoint_doctor(request, doctor_pk):
     doctor = get_object_or_404(Doctor, pk=doctor_pk)
 
-    if request.method == 'POST' and request.user.is_doctor:
-        form = AppointmentCreateForm(request.POST)
+    if request.method == 'POST' and request.user.is_doctor():
+        form = AppointmentCreateFormDoctor(request.POST)
         if form.is_valid():
             appoint = form.save(commit=False)
             appoint.doctor = doctor
@@ -314,6 +315,26 @@ def create_appoint(request, doctor_pk):
         else:
             raise Http404('Form is not valid')
     else:
-        form = AppointmentCreateForm()
+        form = AppointmentCreateFormDoctor()
 
     return render(request, 'appoint/create_appoint.html', {'form': form})
+
+
+@login_required(login_url='login')
+@permission_required('appoint.add_appointment', raise_exception=True)
+def create_appoint_moderator(request):
+
+    if request.method == 'POST' and request.user.is_moderator():
+        form = AppointmentCreateFormModerator(request.POST)
+        if form.is_valid():
+            appoint = form.save()
+
+            return redirect('doctor_appoints', doctor_pk=appoint.doctor.pk)
+
+        else:
+            raise Http404('Form is not valid')
+    else:
+        form = AppointmentCreateFormModerator()
+
+    return render(request, 'appoint/create_appoint.html', {'form': form})
+

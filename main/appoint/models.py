@@ -17,11 +17,11 @@ class User(AbstractUser):
     def __str__(self):
         return "%s %s" % (self.first_name, self.last_name)
 
-    def get_full_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
-
     def get_absolute_url(self):
         return '/%i' % self.pk
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
 
     def is_customer(self):
         """Return True if User is Customer, else False"""
@@ -59,13 +59,13 @@ class Moderator(User):
     class Meta:
         ordering = ['last_name']
 
+    def __str__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.user_type = 'M'
         return super().save(*args, **kwargs)
-
-    def __str__(self):
-        return "%s %s" % (self.first_name, self.last_name)
 
     def get_full_name(self):
         return '%s %s' % (self.first_name, self.last_name)
@@ -79,20 +79,20 @@ class Doctor(User):
     class Meta:
         ordering = ['specialization', 'last_name']
 
+    def __str__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.user_type = 'D'
         return super().save(*args, **kwargs)
 
-    def __str__(self):
-        return "%s %s" % (self.first_name, self.last_name)
-
-    def get_full_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
-
     def get_absolute_url(self):
         # return f'/{self.pk}'
         return '/%i' % self.pk
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
 
 
 class Customer(User):
@@ -101,20 +101,20 @@ class Customer(User):
     class Meta:
         ordering = ['last_name']
 
+    def __str__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.user_type = 'C'
         return super().save(*args, **kwargs)
 
-    def __str__(self):
-        return "%s %s" % (self.first_name, self.last_name)
-
-    def get_full_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
-
     def get_absolute_url(self):
         return f'/profile/{self.pk}'
         # return '/profile/%i' % self.pk
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
 
 
 class Appointment(models.Model):
@@ -123,6 +123,15 @@ class Appointment(models.Model):
     date = models.DateField('Date')
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['start_time']
+
+    def __str__(self):
+        return str(self.start_time)
+
+    def get_absolute_url(self):
+        return f'/{self.doctor.id}/appoint/{self.id}'
 
     def has_not_customer(self):
         """
@@ -153,15 +162,6 @@ class Appointment(models.Model):
         """
         # function helps hide appointments on weekend
         return 0 <= self.date.weekday() <= 4
-
-    def __str__(self):
-        return str(self.start_time)
-
-    def get_absolute_url(self):
-        return f'/{self.doctor.id}/appoint/{self.id}'
-
-    class Meta:
-        ordering = ['start_time']
 
     has_not_customer.boolean = True
     has_not_customer.short_description = 'Has not customer?'

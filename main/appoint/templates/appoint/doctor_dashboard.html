@@ -7,7 +7,7 @@
         <h1>{{ user.get_full_name }}</h1>
     </div>
     <h1>Create new Appoint</h1>
-        <a href="{% url 'create_appoint' user.pk %}" class="btn btn-dark" role="button">Create appointment</a><br>
+        <a href="{% url 'create_appoint_doctor' user.pk %}" class="btn btn-dark" role="button">Create appointment</a><br>
     <h1>Change Appoint</h1>
     <h1>Delete Appoint</h1>
 {% endblock %}
