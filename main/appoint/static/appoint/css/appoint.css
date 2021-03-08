@@ -82,8 +82,18 @@ body {
 
 .row {
     margin: 0;
+}
+
+.available_appoint {
     background: #EBDEF0;
     border: 2px solid #669999;
+    border-radius: 15px;
+}
+
+.occupied_appoint {
+    background: #8A496B;
+    border: 2px solid #669999;
+    border-radius: 15px;
 }
 
 .appoint_detail {

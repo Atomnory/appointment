@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block BodyContent %}
-    {% if appoints_list.0 %}
+    <!-- Check every inner list in appoints_list. There's 5 lists, each list for each working day.-->
+    {% if appoints_list.0 or appoints_list.1 or appoints_list.2 or appoints_list.3 or appoints_list.4 %}
         <div class="container">
             {% for columns in appoints_list %}
                 <div class="col">
@@ -15,14 +16,18 @@
                     <p>{{ columns.0.date|date:"d N" }}</p>
                     {% for appoint in columns %}
                         <div class="row">
-                            {% if appoint.is_working_day_appointment %}
-                                {% if not appoint.is_outdated %}
-                                    <a href="{% url 'appoint_detail' doctor_pk appoint.id %}">{{ appoint.start_time|time:"H:i" }}</a>
-                                {% else %}
-                                    <p>{{ appoint.start_time|time:"H:i" }}</p>
-                                {% endif %}
+                            {% if appoint.has_not_customer %}
+                                <div class="available_appoint">
+                                    {% if not appoint.is_outdated %}
+                                        <a href="{% url 'appoint_detail' doctor_pk appoint.id %}">{{ appoint.start_time|time:"H:i" }}</a>
+                                    {% else %}
+                                        <p>{{ appoint.start_time|time:"H:i" }}</p>
+                                    {% endif %}
+                                </div>
                             {% else %}
-                                <p>{{ appoint.start_time|time:"H:i" }}</p>
+                                <div class="occupied_appoint">
+                                    <p>{{ appoint.start_time|time:"H:i" }}</p>
+                                </div>
                             {% endif %}
                         </div>
                     {% endfor %}

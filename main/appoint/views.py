@@ -8,10 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 
 from datetime import date
+from datetime import datetime
 from datetime import timedelta
 
 from .forms import AppointmentCreateFormDoctor
 from .forms import AppointmentCreateFormModerator
+from .forms import AppointmentCreateFewForm
 from .models import Appointment
 from .models import Moderator
 from .models import Doctor
@@ -111,8 +113,33 @@ def get_filtered_appoint_list(*, key_day, unfiltered_list):
 
         # add temp_list to appointment_list with index = number day of week
         appointment_list.append(temp_list)
-
     return appointment_list
+
+
+def does_doctor_have_an_appointment_on_further_weeks(*, key_day, doctor_pk):
+    """
+            Return True if doctor has although one appointment in further weeks in this year.
+                False if doctor has not any.
+
+            :param key_day: Instance of datetime.date
+            :param doctor_pk: id of Instance of Doctor
+            :return: Boolean
+        """
+    key_day_week_iso = key_day.isocalendar()[1]  # 'key_day' week of year number
+    key_day_year_iso = key_day.isocalendar()[0]  # 'key_day' year number
+
+    doctor = Doctor.objects.get(pk=doctor_pk)
+    prev_week_key_day = key_day - timedelta(days=7)
+    appoints = doctor.appointment_set.filter(date__gte=prev_week_key_day)
+
+    if appoints:
+        for appoint in appoints:
+            if appoint.date.isocalendar()[0] == key_day_year_iso and \
+                    appoint.date.isocalendar()[1] >= key_day_week_iso and \
+                    appoint.is_working_day_appointment():
+                return True
+
+    return False
 
 
 def does_doctor_have_any_appoint_on_week(*, key_day, doctor_pk):
@@ -156,9 +183,9 @@ def doctor_appoints(request, doctor_pk):
 
     # get info about 'Next week' button for 'appoint.html'
     next_week_day = today + timedelta(days=7)
-    is_next_week_appoint_exists = does_doctor_have_any_appoint_on_week(key_day=next_week_day, doctor_pk=doctor_pk)
-    if is_next_week_appoint_exists is None:
-        raise Http404('Doctor suddenly does not exist.')
+    is_next_week_appoint_exists = does_doctor_have_an_appointment_on_further_weeks(
+        key_day=next_week_day,
+        doctor_pk=doctor_pk)
 
     doctor_appoint_data = {
         'title': doctor.get_full_name(),
@@ -206,10 +233,12 @@ def doctor_appoints_with_day(request, doctor_pk, new_day):
     # get info about 'Prev week' button and 'Next week' button for 'appoint_with_day.html'
     prev_week_day = today - timedelta(days=7)
     next_week_day = today + timedelta(days=7)
-    is_prev_week_appoint_exists = does_doctor_have_any_appoint_on_week(key_day=prev_week_day, doctor_pk=doctor_pk)
-    is_next_week_appoint_exists = does_doctor_have_any_appoint_on_week(key_day=next_week_day, doctor_pk=doctor_pk)
-    if is_prev_week_appoint_exists is None or is_next_week_appoint_exists is None:
-        raise Http404("Doctor suddenly does not exist.")
+    is_prev_week_appoint_exists = does_doctor_have_an_appointment_on_further_weeks(
+        key_day=prev_week_day,
+        doctor_pk=doctor_pk)
+    is_next_week_appoint_exists = does_doctor_have_an_appointment_on_further_weeks(
+        key_day=next_week_day,
+        doctor_pk=doctor_pk)
 
     doctor_appoint_with_day_data = {
         'title': doctor.get_full_name(),
@@ -340,3 +369,64 @@ def create_appoint_moderator(request):
 
 
 # TODO: combine create_appoint_doctor and create_appoint_moderator
+
+
+@login_required(login_url='login')
+@permission_required('appoint.add_appointment', raise_exception=True)
+def create_few_appoints(request):
+    """Create few appoints with the Doctor in the Day"""
+
+    # only moderator can use this function
+    if request.method == 'POST' and request.user.is_moderator():
+        form = AppointmentCreateFewForm(request.POST)
+
+        if form.is_valid():
+            # take clean and valid data from form
+            begin_t = form.cleaned_data['begin_time']
+            finish_t = form.cleaned_data['finish_time']
+            duration_t = form.cleaned_data['duration']
+            date_t = form.cleaned_data['date']
+            doctor_t = form.cleaned_data['doctor']
+
+            # duration_hour = duration_t.hour
+            # duration_minute = duration_t.minute
+
+            # default date, because timedelta is using only with datetime
+            default_year = 2000
+            default_month = 1
+            default_day = 1
+
+            # create datetime instance from date default and time from form
+            begin_date = datetime(year=default_year, month=default_month, day=default_day,
+                                  hour=begin_t.hour, minute=begin_t.minute)
+
+            finish_date = datetime(year=default_year, month=default_month, day=default_day,
+                                   hour=finish_t.hour, minute=finish_t.minute)
+
+            # timedelta instance to increase time
+            duration_timedelta = timedelta(hours=duration_t.hour, minutes=duration_t.minute)
+            # debug counter
+            appoint_counter = 0
+
+            while begin_date + duration_timedelta <= finish_date:
+                # temp_date helps incrementing begin_date
+                temp_date = begin_date + duration_timedelta
+
+                # create new Appointment
+                appoint = Appointment(
+                    start_time=begin_date.time(),
+                    end_time=temp_date.time(),
+                    date=date_t,
+                    doctor=doctor_t)
+
+                appoint.save()
+                begin_date = temp_date
+                appoint_counter += 1
+
+            print(appoint_counter)
+            return redirect('doctor_appoints', doctor_pk=doctor_t.pk)
+
+    else:
+        form = AppointmentCreateFewForm()
+
+    return render(request, 'appoint/create_appoint.html', {'form': form})
