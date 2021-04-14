@@ -29,6 +29,19 @@ class IndexView(generic.ListView):
         return Doctor.objects.all()
 
 
+def index_page(request):
+    specialization_list = Doctor.objects.order_by('specialization').distinct('specialization')
+    doctors_list = Doctor.objects.all()
+    index_page_data = {
+        'specialization_list': specialization_list,
+        'doctors_list': doctors_list
+    }
+    # SELECT DISTINCT specialization FROM doctor ORDER BY specialization;
+
+    return render(request, 'appoint/index.html', index_page_data)
+
+
+
 class DoctorDetailView(generic.DetailView):
     model = Doctor
     template_name = 'appoint/doctor_detail.html'

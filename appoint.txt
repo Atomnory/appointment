@@ -18,6 +18,7 @@ Appoint project
  Doctor:
     zakary - go.norris.23
     toto - Ham.num.1
+    mat_pronto - sbinalla
  Moderator:
     jeant - mi55on_no_win
     rossy - 2-deflect-win

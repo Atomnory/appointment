@@ -3,15 +3,22 @@
 {% block Title %}Doctor appointment{% endblock %}
 
 {% block BodyContent %}
-    <div class="index_doctor_list">
+    <div class="index_doctor_container">
         {% if doctors_list %}
-            <ul>
-                {% for doctor in doctors_list %}
-                    <li><a href="{% url 'doctor_detail' doctor.pk %}">{{ doctor.get_full_name }}</a></li>
+                {% for spec in specialization_list %}
+                    <div class="index_doctor_block">
+                        <p>{{ spec.specialization }}</p>
+                        <ul>
+                        {% for doctor in doctors_list %}
+                            {% if spec.specialization == doctor.specialization %}
+                                <li><a href="{% url 'doctor_detail' doctor.pk %}">{{ doctor.get_full_name }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div>
                 {% endfor %}
-            </ul>
         {% else %}
-            <h1>There's no any Doctors</h1>
+            <h1>There's no any Doctor</h1>
         {% endif %}
     </div>
 {% endblock %}

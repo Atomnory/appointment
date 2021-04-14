@@ -18,7 +18,7 @@ def register(request):
     else:
         form = RegisterUserForm()
 
-    return render(request, 'userauth/register.html', {'form': form})
+    return render(request, 'userauth/register.html', {'form': form, 'user_type': 'User'})
 
 
 @login_required(login_url='login')
@@ -36,7 +36,7 @@ def register_doctor(request):
     else:
         form = RegisterDoctorUserForm()
 
-    return render(request, 'userauth/register.html', {'form': form})
+    return render(request, 'userauth/register.html', {'form': form, 'user_type': 'Doctor'})
 
 
 @login_required(login_url='login')
@@ -56,4 +56,4 @@ def register_moderator(request):
     else:
         form = RegisterModeratorUserForm()
 
-    return render(request, 'userauth/register.html', {'form': form})
+    return render(request, 'userauth/register.html', {'form': form, 'user_type': 'Moderator'})
