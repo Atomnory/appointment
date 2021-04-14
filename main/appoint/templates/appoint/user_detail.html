@@ -14,19 +14,19 @@
         {% if appointment_list_past %}
             <h3>Past appointments:</h3>
             {% for appoint in appointment_list_past %}
-                <h3>Appointment: {{ appoint.date|date:"j N Y" }}, {{ appoint.start_time|time:"H:i" }} - {{ appoint.end_time|time:"H:i" }} : {{ appoint.doctor }} ({{ appoint.doctor.specialization }})</h3>
+                <h3>{{ appoint.date|date:"j N Y" }}, {{ appoint.start_time|time:"H:i" }} - {{ appoint.end_time|time:"H:i" }} : {{ appoint.doctor }} ({{ appoint.doctor.specialization }})</h3>
             {% endfor %}
         {% endif %}
         {% if appointment_list_present %}
             <h3>Today appointments:</h3>
             {% for appoint in appointment_list_present %}
-                <h3>Appointment: {{ appoint.date|date:"j N Y" }}, {{ appoint.start_time|time:"H:i" }} - {{ appoint.end_time|time:"H:i" }} : {{ appoint.doctor }} ({{ appoint.doctor.specialization }})</h3>
+                <h3>{{ appoint.date|date:"j N Y" }}, {{ appoint.start_time|time:"H:i" }} - {{ appoint.end_time|time:"H:i" }} : {{ appoint.doctor }} ({{ appoint.doctor.specialization }})</h3>
             {% endfor %}
         {% endif %}
         {% if appointment_list_future %}
             <h3>Future appointments:</h3>
             {% for appoint in appointment_list_future %}
-                <h3>Appointment: {{ appoint.date|date:"j N Y" }}, {{ appoint.start_time|time:"H:i" }} - {{ appoint.end_time|time:"H:i" }} : {{ appoint.doctor }} ({{ appoint.doctor.specialization }})</h3>
+                <h3>{{ appoint.date|date:"j N Y" }}, {{ appoint.start_time|time:"H:i" }} - {{ appoint.end_time|time:"H:i" }} : {{ appoint.doctor }} ({{ appoint.doctor.specialization }})</h3>
             {% endfor %}
         {% endif %}
 

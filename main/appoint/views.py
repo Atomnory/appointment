@@ -202,8 +202,7 @@ def doctor_appoints(request, doctor_pk):
 
     doctor_appoint_data = {
         'title': doctor.get_full_name(),
-        'doctor_name': doctor.get_full_name(),
-        'doctor_pk': doctor_pk,
+        'doctor': doctor,
         'today': today,
         'next_week': next_week_day,
         'is_nw_app_exists': is_next_week_appoint_exists,
@@ -255,8 +254,7 @@ def doctor_appoints_with_day(request, doctor_pk, new_day):
 
     doctor_appoint_with_day_data = {
         'title': doctor.get_full_name(),
-        'doctor_name': doctor.get_full_name(),
-        'doctor_pk': doctor_pk,
+        'doctor': doctor,
         'today': today,
         'prev_week': prev_week_day,
         'next_week': next_week_day,
@@ -295,11 +293,11 @@ def make_appoint(request, doctor_pk, appoint_pk):
                 appoint.save()
 
                 if not appoint.has_not_customer():
-                    return redirect(reverse('appoint_detail', args=(doctor_pk, appoint_pk)))
+                    return redirect(reverse('user_detail', args=(request.user.pk, )))
                 else:
                     make_appoint_error = 'ERROR: appointment.customer still empty'
             else:
-                make_appoint_error = 'ERROR: user is not authenticated or is not Customer'
+                make_appoint_error = 'ERROR: user is not Customer'
     else:
         return redirect('doctor_appoints', doctor_pk=doctor_pk)
 

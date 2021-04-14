@@ -8,24 +8,30 @@
 
 {% block BodyContent %}
     <div class="appoint_detail">
-        <h1>Start time: {{ appoint.start_time|time:"H:i" }}</h1>
-        <h1>End time: {{ appoint.end_time|time:"H:i" }}</h1>
-        <h2>Date: {{ appoint.date|date:"j N Y" }}</h2>
-        <h1>Doctor: {{ appoint.doctor.get_full_name }}</h1>
+        <h3>Appointment at:</h3>
+        <p>{{ appoint.date|date:"j N Y" }}<br>
+        {{ appoint.start_time|time:"H:i" }} - {{ appoint.end_time|time:"H:i" }}</p>
+        <h3>Doctor:</h3>
+        <p>{{ appoint.doctor.get_full_name }}</p>
 
         {% if not appoint.has_not_customer %}
-            <h1>Customer: {{ appoint.customer.get_full_name }}</h1>
+            <h3>Customer:</h3>
+            <p>{{ appoint.customer.get_full_name }}</p><br>
         {% endif %}
-
     </div>
-{% endblock %}
 
-{% block Footer %}
     {% if appoint.has_not_customer %}
         {% if not appoint.is_outdated %}
-            <a href="{% url 'make_appoint' appoint.doctor.pk appoint.pk %}" class="btn btn-light" role="button">Make appoint</a>
+            {% if user.is_customer %}
+                <a href="{% url 'make_appoint' appoint.doctor.pk appoint.pk %}" class="btn btn-success" role="button">Make appoint</a>
+            {% endif %}
+            {% if not user.is_authenticated %}
+                <h1>You should be authenticated to make appointment</h1>
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
         {% else %}
             <h1>Appoint is outdated</h1>
         {% endif %}
     {% endif %}
-{% endblock Footer %}
+    <a href="{% url 'doctor_appoints' appoint.doctor.pk %}" class="btn btn-warning" role="button">Choose another time</a>
+{% endblock %}

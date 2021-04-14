@@ -15,8 +15,6 @@
             {{ doctor.info }}
         </div>
     </div>
-{% endblock %}
 
-{% block Footer %}
     <a href="{% url 'doctor_appoints' doctor.pk %}" class="btn btn-warning" role="button">Show appointments</a>
-{% endblock Footer %}
+{% endblock %}

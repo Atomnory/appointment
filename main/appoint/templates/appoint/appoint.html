@@ -3,7 +3,7 @@
 {% block Title %}{{ title }}{% endblock %}
 
 {% block HeaderTitle %}
-    <a href="{% url 'doctor_detail' doctor_pk %}">To doctor</a>
+    <a href="{% url 'doctor_detail' doctor.pk %}">To doctor</a>
 {% endblock %}
 
 {% block BodyContent %}
@@ -19,7 +19,11 @@
                             {% if appoint.has_not_customer %}
                                 <div class="available_appoint">
                                     {% if not appoint.is_outdated %}
-                                        <a href="{% url 'appoint_detail' doctor_pk appoint.id %}">{{ appoint.start_time|time:"H:i" }}</a>
+                                        {% if user.is_customer %}
+                                            <a href="{% url 'make_appoint' appoint.doctor.pk appoint.pk %}">{{ appoint.start_time|time:"H:i" }}</a>
+                                        {% else %}
+                                            <a href="{% url 'appoint_detail' doctor.pk appoint.pk %}">{{ appoint.start_time|time:"H:i" }}</a>
+                                        {% endif %}
                                     {% else %}
                                         <p>{{ appoint.start_time|time:"H:i" }}</p>
                                     {% endif %}
@@ -37,12 +41,10 @@
     {% else %}
         <h1>There's none any appointments</h1>
     {% endif %}
-{% endblock %}
 
-{% block Footer %}
     {% block ButtonChangeWeek %}
         {% if is_nw_app_exists %}
-            <a href="{% url 'doctor_appoints_with_day' doctor_pk next_week %}" class="btn btn-info" role="button">Next week</a>
+            <a href="{% url 'doctor_appoints_with_day' doctor.pk next_week %}" class="btn btn-info" role="button">Next week</a>
         {% endif %}
     {% endblock ButtonChangeWeek %}
-{% endblock Footer %}
+{% endblock %}

@@ -49,6 +49,7 @@ body {
 }
 
 .BodyContent {
+    font-family: 'Poppins', sans-serif;
     width: 100%;
     padding: 10px;
 }
@@ -78,10 +79,12 @@ body {
 
 .col p, h4 {
     margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
 .row {
     margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
 .available_appoint {
@@ -125,20 +128,26 @@ body {
 
 .index_doctor_block p {
     margin-bottom: 10px;
-    font-family: 'Poppins', sans-serif;
 }
 
 .index_doctor_block li {
-    font-family: 'Poppins', sans-serif;
     margin: 0 0 3px 10px;
 }
 
 .appoint_detail {
-
+    font-size: 20px;
 }
 
 .make_appoint {
+    font-size: 20px;
+}
 
+.make_appoint a {
+    margin-top: 10px;
+}
+
+.create_appoint_doctor button {
+    margin-top: 5px;
 }
 
 .doctor_detail h1, h4 {
@@ -154,28 +163,10 @@ body {
     margin: 0 0 8px;
 }
 
-
 .dashboard_name {
     text-align: center;
 }
 
-.footer {
-    margin-top: auto;
-
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    flex-direction: row;
-    padding: 5px 10px;
-
-    background: #66cc99;
-    border-top: 2px solid #669999;
-
-    overflow: hidden;
-    white-space: initial;
-}
-
-.footer a {
-    display: inline-block;
-    margin: 0 5px;
+.dashboard_skills a {
+    margin-bottom: 5px;
 }
