@@ -21,6 +21,7 @@ from .models import Customer
 
 # TODO: Do refactor. Move excessive code to business_logic.
 
+
 class IndexView(generic.ListView):
     model = Doctor
     template_name = 'appoint/index.html'
