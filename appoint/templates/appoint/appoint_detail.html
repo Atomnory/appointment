@@ -27,7 +27,7 @@
             {% endif %}
             {% if not user.is_authenticated %}
                 <h1>You should be authenticated to make appointment</h1>
-                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'login' %}" class="btn btn-info" role="button">Login</a>
             {% endif %}
         {% else %}
             <h1>Appoint is outdated</h1>

@@ -31,16 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'appoint.apps.AppointConfig',
-    'userauth.apps.UserauthConfig',
-    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+    'appoint.apps.AppointConfig',
+    'userauth.apps.UserauthConfig',
+    'crispy_forms',
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
