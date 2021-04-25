@@ -19,7 +19,6 @@ from .models import Moderator
 from .models import Doctor
 from .models import Customer
 
-# TODO: Do refactor. Move excessive code to business_logic.
 
 class IndexView(generic.ListView):
     model = Doctor
@@ -37,8 +36,10 @@ def index_page(request):
         'specialization_list': specialization_list,
         'doctors_list': doctors_list
     }
+    # SELECT DISTINCT specialization FROM doctor ORDER BY specialization;
 
     return render(request, 'appoint/index.html', index_page_data)
+
 
 
 class DoctorDetailView(generic.DetailView):

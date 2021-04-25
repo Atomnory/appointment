@@ -37,6 +37,8 @@ class User(AbstractUser):
 
 
 class ModeratorManager(UserManager):
+    # def get_queryset(self, *args, **kwargs):
+    #     return super().get_queryset(*args, **kwargs).filter(user_type='M')
     def get_queryset(self):
         return super().get_queryset().filter(user_type='M')
 
@@ -131,7 +133,7 @@ class Appointment(models.Model):
     def get_absolute_url(self):
         return f'/{self.doctor.id}/appoint/{self.id}'
 
-    def has_not_customer(self):         # TODO: change method to opposite(has_customer instead has_not_customer)
+    def has_not_customer(self):
         """
             True if this appointment has not customer.
             False if appointment already has customer.

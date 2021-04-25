@@ -1,7 +1,11 @@
+from django import forms
+from django.contrib.auth import login
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from appoint.models import Customer
 from appoint.models import Doctor
 from appoint.models import Moderator
+from django.db import transaction
 
 
 class RegisterUserForm(UserCreationForm):

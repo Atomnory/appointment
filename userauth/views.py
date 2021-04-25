@@ -28,7 +28,7 @@ def register_doctor(request):
         form = RegisterDoctorUserForm(request.POST)
         if form.is_valid():
             new_doctor = form.save()
-            group_doctor = Group.objects.get(name='DoctorGroup')    # May not working if group has another name
+            group_doctor = Group.objects.get(name='DoctorGroup')
             new_doctor.groups.add(group_doctor)
             return redirect('index')
         else:
@@ -46,8 +46,8 @@ def register_moderator(request):
         form = RegisterModeratorUserForm(request.POST)
         if form.is_valid():
             new_moderator = form.save()
-            group_doctor = Group.objects.get(name='DoctorGroup')        # May not working if group has another name
-            group_moderator = Group.objects.get(name='ModeratorGroup')  # May not working if group has another name
+            group_doctor = Group.objects.get(name='DoctorGroup')
+            group_moderator = Group.objects.get(name='ModeratorGroup')
             new_moderator.groups.add(group_doctor)
             new_moderator.groups.add(group_moderator)
             return redirect('index')
