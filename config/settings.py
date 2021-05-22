@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(9$zhn2b4tw&jrlowpus)o8^rwh#peait20a%(b9n!op971yde'
+SECRET_KEY = os.getenv('APPOINT_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -28,7 +28,7 @@ DEBUG = True
 # ALLOWED_HOSTS = ['atomnory-appointment.herokuapp.com', '127.0.0.1']
 ALLOWED_HOSTS = ['*']
 
-# INTERNAL_IPS = ['127.0.0.1']
+INTERNAL_IPS = ['127.0.0.1']
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
@@ -44,11 +44,11 @@ INSTALLED_APPS = [
     'appoint.apps.AppointConfig',
     'userauth.apps.UserauthConfig',
     'crispy_forms',
-    # 'debug_toolbar'
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -86,11 +86,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'main_appoint_db2',
-        'USER': 'dbmaster',
-        'PASSWORD': 'ostrov1leto1polls',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_POSTGRES_APPOINT_NAME'),
+        'USER': os.getenv('DB_POSTGRES_USER'),
+        'PASSWORD': os.getenv('DB_POSTGRES_USER_PASSWORD'),
+        'HOST': os.getenv('DB_POSTGRES_HOST'),
+        'PORT': os.getenv('DB_POSTGRES_PORT'),
     }
 }
 
@@ -140,6 +140,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

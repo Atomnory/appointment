@@ -115,6 +115,14 @@ class Customer(User):
         return '%s %s' % (self.first_name, self.last_name)
 
 
+class DoctorPhoto(models.Model):
+    doctor = models.OneToOneField(Doctor, on_delete=models.CASCADE, primary_key=True)
+    photo = models.ImageField(upload_to='doctor_photo')
+
+    def __str__(self):
+        return self.doctor.get_full_name()
+
+
 class Appointment(models.Model):
     start_time = models.TimeField('Start time')
     end_time = models.TimeField('End time')

@@ -22,3 +22,10 @@ Appoint project
  Moderator:
     jeant - mi55on_no_win
     rossy - 2-deflect-win
+
+Groups:
+DoctorGroup:
+    (Add Appointment)
+ModeratorGroup:
+    (Add Doctor)
+    (Add Moderator)

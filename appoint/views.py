@@ -7,6 +7,8 @@ from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -14,9 +16,11 @@ from datetime import timedelta
 from .forms import AppointmentCreateFormDoctor
 from .forms import AppointmentCreateFormModerator
 from .forms import AppointmentCreateFewForm
+from .forms import DoctorImageUploadForm
 from .models import Appointment
 from .models import Moderator
 from .models import Doctor
+from .models import DoctorPhoto
 from .models import Customer
 
 # TODO: Do refactor. Move excessive code to business_logic.
@@ -42,20 +46,28 @@ def index_page(request):
     return render(request, 'appoint/index.html', index_page_data)
 
 
-class DoctorDetailView(generic.DetailView):
-    model = Doctor
-    template_name = 'appoint/doctor_detail.html'
-    context_object_name = 'doctor'
+# class DoctorDetailView(generic.DetailView):
+#     model = Doctor
+#     template_name = 'appoint/doctor_detail.html'
+#     context_object_name = 'doctor'
 
 
-# def doctor_profile(request, doctor_id):
-#     doctor = get_object_or_404(DoctorUser, user__pk=doctor_id)
-#
-#     doctor_profile_data = {
-#         'doctor': doctor
-#     }
-#
-#     return render(request, 'appoint/doctor_detail.html', doctor_profile_data)
+def doctor_profile(request, doctor_pk):
+    doctor = get_object_or_404(Doctor, pk=doctor_pk)
+
+    # Use self-made try-block not get_object_or_404 because page should exist even if photo was not uploaded
+    try:
+        photo = doctor.doctorphoto
+    except ObjectDoesNotExist:
+        photo = None
+
+    doctor_profile_data = {
+        'doctor': doctor,
+        'photo': photo.photo,
+        'user': request.user
+    }
+
+    return render(request, 'appoint/doctor_detail.html', doctor_profile_data)
 
 
 @login_required(login_url='login')
@@ -65,7 +77,6 @@ def user_profile(request, user_pk):
         today = date.today()
 
         user_profile_data = {
-            'title': customer.get_full_name(),
             'customer': customer,
             'appointment_list_past': customer.appointment_set.filter(date__lt=today).order_by('date'),
             'appointment_list_present': customer.appointment_set.filter(date__exact=today).order_by('start_time'),
@@ -322,6 +333,7 @@ def moderator_dashboard(request):
         return render(request, 'appoint/moderator_dashboard.html', moderator_dashboard_data)
     else:
         raise Http404("ERROR: user is not authenticated.")
+# TODO: merge moderator_dashboard and doctor_dashboard
 
 
 @login_required(login_url='login')
@@ -332,10 +344,31 @@ def doctor_dashboard(request, doctor_pk):
         'user': request.user
     }
 
-    if request.user.is_authenticated and request.user.pk == doctor_pk and request.user.is_doctor():
+    if request.user.is_authenticated and request.user.pk == doctor.pk and request.user.is_doctor():
         return render(request, 'appoint/doctor_dashboard.html', doctor_dashboard_data)
     else:
         raise Http404("ERROR: user is not authenticated.")
+
+
+@login_required(login_url='login')
+def upload_doctor_photo(request, doctor_pk):
+    doctor = get_object_or_404(Doctor, pk=doctor_pk)
+
+    if request.method == 'POST' and request.user.is_authenticated and request.user.pk == doctor.pk:
+        form = DoctorImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            photo = form.save(commit=False)
+            photo.doctor = doctor
+            photo.save()
+
+            return redirect('doctor_detail', doctor_pk=doctor.pk)
+
+        else:
+            raise Http404('Form is not valid')
+    else:
+        form = DoctorImageUploadForm()
+
+    return render(request, 'appoint/doctor_upload_photo.html', {'form': form, 'doctor': doctor})
 
 
 @login_required(login_url='login')

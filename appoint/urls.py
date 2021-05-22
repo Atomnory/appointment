@@ -3,7 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.index_page, name='index'),
-    path('<int:pk>', views.DoctorDetailView.as_view(), name='doctor_detail'),
+    path('<int:doctor_pk>', views.doctor_profile, name='doctor_detail'),
+    path('<int:doctor_pk>/upload-photo', views.upload_doctor_photo, name='doctor_upload_photo'),
     path('profile/<int:user_pk>', views.user_profile, name='user_detail'),
     path('<int:doctor_pk>/appoint', views.doctor_appoints, name='doctor_appoints'),
     path('<int:doctor_pk>/appoint-<slug:new_day>', views.doctor_appoints_with_day, name='doctor_appoints_with_day'),

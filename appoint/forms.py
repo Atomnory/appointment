@@ -1,4 +1,4 @@
-from .models import Appointment
+from .models import Appointment, DoctorPhoto
 from django import forms
 
 
@@ -22,3 +22,9 @@ class AppointmentCreateFewForm(forms.ModelForm):
     class Meta:
         model = Appointment
         fields = ['doctor', 'date']
+
+
+class DoctorImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = DoctorPhoto
+        fields = ['photo']

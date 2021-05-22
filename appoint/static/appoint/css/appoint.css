@@ -150,6 +150,10 @@ body {
     margin-top: 5px;
 }
 
+.doctor_detail {
+    margin-bottom: 10px;
+}
+
 .doctor_detail h1, h4 {
     margin: 0 0 8px;
 }
@@ -157,6 +161,14 @@ body {
 .doctor_detail_info {
     margin: 15px 0;
     max-width: 650px;
+}
+
+.doctor_detail_photo {
+    margin-bottom: 10px;
+}
+
+.upload_doctor_photo {
+
 }
 
 .user_detail {

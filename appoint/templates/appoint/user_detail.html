@@ -1,6 +1,6 @@
 {% extends 'appoint/layout.html' %}
 
-{% block Title %}{{ customer.pk }}{% endblock %}
+{% block Title %}{{ customer.get_full_name }}{% endblock %}
 
 {% block HeaderTitle %}
     <a href="{% url 'index' %}">To main</a>
