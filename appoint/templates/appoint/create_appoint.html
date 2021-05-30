@@ -4,12 +4,12 @@
 {% block Title %}Create appointment{% endblock %}
 
 {% block HeaderTitle %}
-    <a href="{% url 'doctor_appoints' user.pk %}">To appointments</a>
+<!--    <a href="{% url 'doctor_appoints' user.pk %}">To appointments</a>-->
 {% endblock %}
 
 
 {% block BodyContent %}
-    <div class="create_appoint_doctor">
+    <div class="create_appoint">
         {{ user.get_full_name }}<br>
         <form method="post">
             {% csrf_token %}

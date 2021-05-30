@@ -99,6 +99,14 @@ body {
     border-radius: 15px;
 }
 
+.occupied_appoint a {
+    color: #5CD6A0;
+}
+
+.occupied_appoint a:hover {
+    color: #54C492;
+}
+
 .index_doctor_container {
     display: flex;
     justify-content: flex-start;
@@ -110,7 +118,6 @@ body {
 
     overflow: hidden;
 }
-
 
 .index_doctor_block {
     margin: 0 10px 10px 0;
@@ -138,33 +145,52 @@ body {
     font-size: 20px;
 }
 
-.make_appoint {
-    font-size: 20px;
+.appoint_detail button {
+    margin-bottom: 5px;
 }
 
-.make_appoint a {
-    margin-top: 10px;
-}
-
-.create_appoint_doctor button {
+.create_appoint button {
     margin-top: 5px;
 }
 
 .doctor_detail {
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
-.doctor_detail h1, h4 {
-    margin: 0 0 8px;
-}
-
-.doctor_detail_info {
+.doctor_detail_info_container {
     margin: 15px 0;
     max-width: 650px;
 }
 
-.doctor_detail_photo {
-    margin-bottom: 10px;
+.doctor_detail_info {
+    padding-left: 25px;
+}
+
+.doctor_detail_info_container h1, h4 {
+    margin-bottom: 8px;
+}
+
+.doctor_detail_photo_container {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    max-width: 302px;
+}
+
+.doctor_photo {
+    max-width: 100%;
+    height: auto;
+
+    border: 1px solid #c2d6d6;
+    border-radius: 5px;
+}
+
+.doctor_detail_button {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .upload_doctor_photo {

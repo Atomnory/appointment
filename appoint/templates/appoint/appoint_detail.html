@@ -3,7 +3,7 @@
 {% block Title %}{{ title }}{% endblock %}
 
 {% block HeaderTitle %}
-    <a href="{% url 'doctor_appoints' appoint.doctor.pk %}">{{ appoint.doctor.get_full_name }}</a>
+    <a href="{% url 'doctor_appoints' appoint.doctor.pk %}">Back to appointments</a>
 {% endblock %}
 
 {% block BodyContent %}
@@ -15,23 +15,33 @@
         <p>{{ appoint.doctor.get_full_name }}</p>
 
         {% if appoint.has_customer %}
-            <h3>Customer:</h3>
-            <p>{{ appoint.customer.get_full_name }}</p><br>
+            {% if requester.pk == appoint.customer.pk %}
+                <h3>You have been registered to this appointment</h3>
+                <p>{{ appoint.customer.get_full_name }}</p>
+            {% elif requester.is_moderator or requester.is_doctor %}
+                <h3>Customer:</h3>
+                <p>{{ appoint.customer.get_full_name }}</p>
+            {% else %}
+                <h1>Appointment is occupied already</h1>
+            {% endif %}
+        {% elif not appoint.has_customer %}
+            {% if not appoint.is_outdated %}
+                {% if requester.is_moderator or requester.is_doctor %}
+                    <h3>Appointment is available</h3>
+                {% else %}
+                    <h3>Customer:</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <p>{{ requester.get_full_name }}</p>
+                        <button class="btn btn-success" type="submit">Accept</button>
+                    </form>
+                {% endif %}
+            {% else %}
+                <h1>Appointment is outdated</h1>
+            {% endif %}
         {% endif %}
-    </div>
 
-    {% if not appoint.has_customer %}
-        {% if not appoint.is_outdated %}
-            {% if user.is_customer %}
-                <a href="{% url 'make_appoint' appoint.doctor.pk appoint.pk %}" class="btn btn-success" role="button">Make appoint</a>
-            {% endif %}
-            {% if not user.is_authenticated %}
-                <h1>You should be authenticated to make appointment</h1>
-                <a href="{% url 'login' %}" class="btn btn-info" role="button">Login</a>
-            {% endif %}
-        {% else %}
-            <h1>Appoint is outdated</h1>
-        {% endif %}
-    {% endif %}
-    <a href="{% url 'doctor_appoints' appoint.doctor.pk %}" class="btn btn-warning" role="button">Choose another time</a>
+        <a href="{% url 'doctor_appoints' appoint.doctor.pk %}" class="btn btn-warning" role="button">Choose another time</a>
+        <p>{{ error_text }}</p>
+    </div>
 {% endblock %}

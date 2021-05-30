@@ -26,15 +26,6 @@ from .models import Customer
 # TODO: Do refactor. Move excessive code to business_logic.
 
 
-class IndexView(generic.ListView):
-    model = Doctor
-    template_name = 'appoint/index.html'
-    context_object_name = 'doctors_list'
-
-    def get_queryset(self):
-        return Doctor.objects.all()
-
-
 def index_page(request):
     specialization_list = Doctor.objects.order_by('specialization').distinct('specialization')
     doctors_list = Doctor.objects.all()
@@ -46,24 +37,18 @@ def index_page(request):
     return render(request, 'appoint/index.html', index_page_data)
 
 
-# class DoctorDetailView(generic.DetailView):
-#     model = Doctor
-#     template_name = 'appoint/doctor_detail.html'
-#     context_object_name = 'doctor'
-
-
 def doctor_profile(request, doctor_pk):
     doctor = get_object_or_404(Doctor, pk=doctor_pk)
 
     # Use self-made try-block not get_object_or_404 because page should exist even if photo was not uploaded
     try:
-        photo = doctor.doctorphoto
+        photo = doctor.doctorphoto.photo
     except ObjectDoesNotExist:
         photo = None
 
     doctor_profile_data = {
         'doctor': doctor,
-        'photo': photo.photo,
+        'photo': photo,
         'user': request.user
     }
 
@@ -218,6 +203,7 @@ def doctor_appoints(request, doctor_pk):
         'next_week': next_week_day,
         'is_nw_app_exists': is_next_week_appoint_exists,
         'appoints_list': appoint_list,
+        'requester': request.user,
     }
 
     return render(request, 'appoint/appoint.html', doctor_appoint_data)
@@ -272,54 +258,48 @@ def doctor_appoints_with_day(request, doctor_pk, new_day):
         'is_pw_app_exists': is_prev_week_appoint_exists,
         'is_nw_app_exists': is_next_week_appoint_exists,
         'appoints_list': appoint_list,
+        'requester': request.user,
     }
 
     return render(request, 'appoint/appoint_with_day.html', doctor_appoint_with_day_data)
 
 
+@login_required(login_url='login')
 def appoint_detail(request, doctor_pk, appoint_pk):
     doctor = get_object_or_404(Doctor, pk=doctor_pk)
     appoint = get_object_or_404(Appointment, pk=appoint_pk)
 
+    appoint_error = ''
+
+    if not appoint.has_customer():
+        if not appoint.is_outdated():
+            if request.method == 'POST':
+                if request.user.is_customer():
+                    customer = get_object_or_404(Customer, pk=request.user.pk)
+                    appoint.customer = customer
+                    appoint.save()
+
+                    if appoint.has_customer():
+                        return redirect('user_detail', user_pk=appoint.customer.pk)
+                    else:
+                        appoint_error = 'ERROR: appointment.customer still empty'
+                else:
+                    appoint_error = 'ERROR: user is not Customer'
+        else:
+            return redirect('doctor_appoints', doctor_pk=doctor_pk)
+    else:
+        if request.user.is_customer() and request.user.pk != appoint.customer.pk:
+            return redirect('doctor_appoints', doctor_pk=doctor_pk)
+
+
     appoint_detail_data = {
         'title': appoint.start_time,
         'appoint': appoint,
+        'error_text': appoint_error,
+        'requester': request.user,
     }
 
     return render(request, 'appoint/appoint_detail.html', appoint_detail_data)
-
-
-@login_required(login_url='login')
-def make_appoint(request, doctor_pk, appoint_pk):
-    doctor = get_object_or_404(Doctor, pk=doctor_pk)
-    appoint = get_object_or_404(Appointment, pk=appoint_pk)
-
-    make_appoint_error = ''
-
-    if not appoint.has_customer() and not appoint.is_outdated():
-        if request.method == 'POST':
-            if request.user.is_authenticated and request.user.is_customer():
-                customer = get_object_or_404(Customer, pk=request.user.pk)
-                appoint.customer = customer
-                appoint.save()
-
-                if appoint.has_customer():
-                    return redirect(reverse('user_detail', args=(request.user.pk, )))
-                else:
-                    make_appoint_error = 'ERROR: appointment.customer still empty'
-            else:
-                make_appoint_error = 'ERROR: user is not Customer'
-    else:
-        return redirect('doctor_appoints', doctor_pk=doctor_pk)
-
-    make_appoint_data = {
-        'title': appoint.start_time,
-        'appoint': appoint,
-        'error_text': make_appoint_error,
-        'customer': request.user
-    }
-
-    return render(request, 'appoint/make_appoint.html', make_appoint_data)
 
 
 @login_required(login_url='login')
@@ -373,46 +353,34 @@ def upload_doctor_photo(request, doctor_pk):
 
 @login_required(login_url='login')
 @permission_required('appoint.add_appointment', raise_exception=True)
-def create_appoint_doctor(request, doctor_pk):
-    doctor = get_object_or_404(Doctor, pk=doctor_pk)
+def create_appoint(request):
 
-    if request.method == 'POST' and request.user.is_doctor():
-        form = AppointmentCreateFormDoctor(request.POST)
-        if form.is_valid():
-            appoint = form.save(commit=False)
-            appoint.doctor = doctor
-            appoint.save()
-
-            return redirect('doctor_appoints', doctor_pk=doctor_pk)
-
+    if request.user.is_doctor():
+        doctor = get_object_or_404(Doctor, pk=request.user.pk)
+        if request.method == 'POST':
+            form = AppointmentCreateFormDoctor(request.POST)
+            if form.is_valid():
+                appoint = form.save(commit=False)
+                appoint.doctor = doctor
+                appoint.save()
+                return redirect('doctor_appoints', doctor_pk=appoint.doctor.pk)
+            else:
+                raise Http404('Form is not valid')
         else:
-            raise Http404('Form is not valid')
-    else:
-        form = AppointmentCreateFormDoctor()
+            form = AppointmentCreateFormDoctor()
+
+    elif request.user.is_moderator():
+        if request.method == 'POST':
+            form = AppointmentCreateFormModerator(request.POST)
+            if form.is_valid():
+                appoint = form.save()
+                return redirect('doctor_appoints', doctor_pk=appoint.doctor.pk)
+            else:
+                raise Http404('Form is not valid')
+        else:
+            form = AppointmentCreateFormModerator()
 
     return render(request, 'appoint/create_appoint.html', {'form': form})
-
-
-@login_required(login_url='login')
-@permission_required('appoint.add_appointment', raise_exception=True)
-def create_appoint_moderator(request):
-
-    if request.method == 'POST' and request.user.is_moderator():
-        form = AppointmentCreateFormModerator(request.POST)
-        if form.is_valid():
-            appoint = form.save()
-
-            return redirect('doctor_appoints', doctor_pk=appoint.doctor.pk)
-
-        else:
-            raise Http404('Form is not valid')
-    else:
-        form = AppointmentCreateFormModerator()
-
-    return render(request, 'appoint/create_appoint.html', {'form': form})
-
-
-# TODO: combine create_appoint_doctor and create_appoint_moderator
 
 
 @login_required(login_url='login')

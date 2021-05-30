@@ -8,23 +8,25 @@
 
 {% block BodyContent %}
     <div class="doctor_detail">
-        <h1>{{ doctor.get_full_name }}</h1>
-        <h4>{{ doctor.specialization }}</h4>
-
-        <div class="doctor_detail_info">
-            {{ doctor.info }}
+        <div class="doctor_detail_info_container">
+            <h1>{{ doctor.get_full_name }}</h1>
+            <h4>{{ doctor.specialization }}</h4>
+            <div class="doctor_detail_info">
+                {{ doctor.info }}
+            </div>
         </div>
 
-        <div class="doctor_detail_photo">
+        <div class="doctor_detail_photo_container">
             {% if photo %}
-                <img src="{{ photo.url }}" alt="doctor_photo">
+                <img class="doctor_photo" src="{{ photo.url }}" alt="Doctor photo">
             {% endif %}
         </div>
+    </div>
 
+    <div class="doctor_detail_button">
+        <a href="{% url 'doctor_appoints' doctor.pk %}" class="btn btn-warning" role="button">Show appointments</a>
         {% if user.pk == doctor.pk %}
             <a href="{% url 'doctor_upload_photo' doctor.pk %}" class="btn btn-info" role="button">Upload photo</a>
         {% endif %}
     </div>
-
-    <a href="{% url 'doctor_appoints' doctor.pk %}" class="btn btn-warning" role="button">Show appointments</a>
 {% endblock %}

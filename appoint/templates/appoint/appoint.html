@@ -19,18 +19,20 @@
                             {% if not appoint.has_customer %}
                                 <div class="available_appoint">
                                     {% if not appoint.is_outdated %}
-                                        {% if user.is_customer %}
-                                            <a href="{% url 'make_appoint' appoint.doctor.pk appoint.pk %}">{{ appoint.start_time|time:"H:i" }}</a>
-                                        {% else %}
-                                            <a href="{% url 'appoint_detail' doctor.pk appoint.pk %}">{{ appoint.start_time|time:"H:i" }}</a>
-                                        {% endif %}
+                                        <a href="{% url 'appoint_detail' doctor.pk appoint.pk %}">{{ appoint.start_time|time:"H:i" }}</a>
                                     {% else %}
                                         <p>{{ appoint.start_time|time:"H:i" }}</p>
                                     {% endif %}
                                 </div>
                             {% else %}
                                 <div class="occupied_appoint">
-                                    <p>{{ appoint.start_time|time:"H:i" }}</p>
+                                    {% if requester.pk == appoint.customer.pk %}
+                                        <a href="{% url 'appoint_detail' doctor.pk appoint.pk %}">{{ appoint.start_time|time:"H:i" }}</a>
+                                    {% elif requester.is_moderator or requester.is_doctor %}
+                                        <a href="{% url 'appoint_detail' doctor.pk appoint.pk %}">{{ appoint.start_time|time:"H:i" }}</a>
+                                    {% else %}
+                                        <p>{{ appoint.start_time|time:"H:i" }}</p>
+                                    {% endif %}
                                 </div>
                             {% endif %}
                         </div>
