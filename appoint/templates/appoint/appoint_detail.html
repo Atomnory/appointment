@@ -14,13 +14,13 @@
         <h3>Doctor:</h3>
         <p>{{ appoint.doctor.get_full_name }}</p>
 
-        {% if not appoint.has_not_customer %}
+        {% if appoint.has_customer %}
             <h3>Customer:</h3>
             <p>{{ appoint.customer.get_full_name }}</p><br>
         {% endif %}
     </div>
 
-    {% if appoint.has_not_customer %}
+    {% if not appoint.has_customer %}
         {% if not appoint.is_outdated %}
             {% if user.is_customer %}
                 <a href="{% url 'make_appoint' appoint.doctor.pk appoint.pk %}" class="btn btn-success" role="button">Make appoint</a>

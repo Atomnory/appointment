@@ -7,7 +7,7 @@ from .models import User
 
 
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('start_time', 'end_time', 'date', 'doctor', 'has_not_customer', 'is_outdated',
+    list_display = ('start_time', 'end_time', 'date', 'doctor', 'has_customer', 'is_outdated',
                     'is_working_day_appointment')
 
     list_filter = ['start_time', 'date']

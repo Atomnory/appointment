@@ -14,7 +14,7 @@
         <h3>Doctor:</h3>
         <p>{{ appoint.doctor.get_full_name }}</p>
 
-        {% if appoint.has_not_customer %}
+        {% if not appoint.has_customer %}
             {% if not appoint.is_outdated %}
                 <h3>Customer:</h3>
                 <form method="post">

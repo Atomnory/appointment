@@ -1,14 +1,13 @@
 Appoint project
 
-1. Add urls
-
 
 ////
 
 
 1,5. Добавить страницу смены пароля для Moderator
-2. Добавить массовое создание appointment модератором
-3. Добавить разные html страницы
+
+4. Add auto creating groups
+5. Fix createsuperuser
 
 
  ///

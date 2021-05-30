@@ -16,7 +16,7 @@
                     <p>{{ columns.0.date|date:"d N" }}</p>
                     {% for appoint in columns %}
                         <div class="row">
-                            {% if appoint.has_not_customer %}
+                            {% if not appoint.has_customer %}
                                 <div class="available_appoint">
                                     {% if not appoint.is_outdated %}
                                         {% if user.is_customer %}

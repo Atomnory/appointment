@@ -139,14 +139,14 @@ class Appointment(models.Model):
     def get_absolute_url(self):
         return f'/{self.doctor.id}/appoint/{self.id}'
 
-    def has_not_customer(self):         # TODO: change method to opposite(has_customer instead has_not_customer)
+    def has_customer(self):
         """
-            True if this appointment has not customer.
-            False if appointment already has customer.
+            True if this appointment has customer.
+            False if appointment has not customer yet.
 
             :return: Boolean
         """
-        return self.customer is None
+        return self.customer is not None
 
     def is_outdated(self):
         """
@@ -169,8 +169,8 @@ class Appointment(models.Model):
         # function helps hide appointments on weekend
         return 0 <= self.date.weekday() <= 4
 
-    has_not_customer.boolean = True
-    has_not_customer.short_description = 'Has not customer?'
+    has_customer.boolean = True
+    has_customer.short_description = 'Has customer?'
 
     is_outdated.boolean = True
     is_outdated.short_description = 'Is Outdated?'

@@ -296,14 +296,14 @@ def make_appoint(request, doctor_pk, appoint_pk):
 
     make_appoint_error = ''
 
-    if appoint.has_not_customer() and not appoint.is_outdated():
+    if not appoint.has_customer() and not appoint.is_outdated():
         if request.method == 'POST':
             if request.user.is_authenticated and request.user.is_customer():
                 customer = get_object_or_404(Customer, pk=request.user.pk)
                 appoint.customer = customer
                 appoint.save()
 
-                if not appoint.has_not_customer():
+                if appoint.has_customer():
                     return redirect(reverse('user_detail', args=(request.user.pk, )))
                 else:
                     make_appoint_error = 'ERROR: appointment.customer still empty'

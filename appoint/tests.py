@@ -1,6 +1,6 @@
 import datetime
 from django.test import TestCase
-from .models import Doctor, Appointment
+from .models import Doctor, Appointment, Customer
 
 
 class AppointmentModelTests(TestCase):
@@ -180,5 +180,28 @@ class AppointmentModelTests(TestCase):
         da = datetime.datetime.today().date()
         app = Appointment(start_time=st_t, end_time=en_t, date=da, doctor=doc)
         self.assertIs(app.is_outdated(), True)
+
+    def test_has_customer_with_customer(self):
+        """
+            has_customer() should return True for appointment with customer
+        """
+        doc = Doctor(first_name='FN', last_name='LN', specialization='SPEC')
+        st_t = datetime.datetime.today().time()
+        en_t = (datetime.datetime.today() + datetime.timedelta(minutes=30)).time()
+        da = (datetime.datetime.today() + datetime.timedelta(days=1)).date()
+        cus = Customer(first_name='CFN', last_name='CLN')
+        app = Appointment(start_time=st_t, end_time=en_t, date=da, customer=cus, doctor=doc)
+        self.assertIs(app.has_customer(), True)
+
+    def test_has_customer_without_customer(self):
+        """
+            has_customer() should return False for appointment without customer
+        """
+        doc = Doctor(first_name='FN', last_name='LN', specialization='SPEC')
+        st_t = datetime.datetime.today().time()
+        en_t = (datetime.datetime.today() + datetime.timedelta(minutes=30)).time()
+        da = (datetime.datetime.today() + datetime.timedelta(days=1)).date()
+        app = Appointment(start_time=st_t, end_time=en_t, date=da, doctor=doc)
+        self.assertIs(app.has_customer(), False)
 
 
