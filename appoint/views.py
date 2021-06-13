@@ -303,31 +303,20 @@ def appoint_detail(request, doctor_pk, appoint_pk):
 
 
 @login_required(login_url='login')
-def moderator_dashboard(request):
+@permission_required('appoint.add_appointment', raise_exception=True)
+def dashboard(request):
+    is_moderator = True
 
-    moderator_dashboard_data = {
-        'user': request.user
+    if request.user.is_doctor():
+        is_moderator = False
+        doctor = get_object_or_404(Doctor, pk=request.user.pk)
+
+    dashboard_data = {
+        'user': request.user,
+        'is_moderator': is_moderator
     }
 
-    if request.user.is_authenticated and request.user.is_moderator():
-        return render(request, 'appoint/moderator_dashboard.html', moderator_dashboard_data)
-    else:
-        raise Http404("ERROR: user is not authenticated.")
-# TODO: merge moderator_dashboard and doctor_dashboard
-
-
-@login_required(login_url='login')
-def doctor_dashboard(request, doctor_pk):
-    doctor = get_object_or_404(Doctor, pk=doctor_pk)
-
-    doctor_dashboard_data = {
-        'user': request.user
-    }
-
-    if request.user.is_authenticated and request.user.pk == doctor.pk and request.user.is_doctor():
-        return render(request, 'appoint/doctor_dashboard.html', doctor_dashboard_data)
-    else:
-        raise Http404("ERROR: user is not authenticated.")
+    return render(request, 'appoint/dashboard.html', dashboard_data)
 
 
 @login_required(login_url='login')

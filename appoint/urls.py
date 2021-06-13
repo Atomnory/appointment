@@ -9,9 +9,8 @@ urlpatterns = [
     path('<int:doctor_pk>/appoint', views.doctor_appoints, name='doctor_appoints'),
     path('<int:doctor_pk>/appoint-<slug:new_day>', views.doctor_appoints_with_day, name='doctor_appoints_with_day'),
     path('<int:doctor_pk>/appoint/<int:appoint_pk>', views.appoint_detail, name='appoint_detail'),
-    path('dashboard', views.moderator_dashboard, name='moderator_dashboard'),
+    path('dashboard', views.dashboard, name='dashboard'),
     path('dashboard/appoint-create', views.create_appoint, name='create_appoint'),
     path('dashboard/appoints-create', views.create_few_appoints, name='create_few_appoints'),
-    path('dashboard/<int:doctor_pk>', views.doctor_dashboard, name='doctor_dashboard'),
 
 ]
